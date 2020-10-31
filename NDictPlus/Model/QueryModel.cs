@@ -12,10 +12,7 @@ namespace NDictPlus.Model
 {
     class QueryModel
     {
-        private Trie<string> myTrie = new Trie<string>()
-        {
-            {"shit", "fuck"}
-        };
+        private Trie<string> myTrie;
 
         public class TrieQueryResult<T> 
             : IEnumerable<KeyValuePair<string, T>>, INotifyCollectionChanged
@@ -55,23 +52,6 @@ namespace NDictPlus.Model
 
         public TrieQueryResult<string> Result { get; private set; }
 
-        public QueryModel()
-        {
-            Result = new TrieQueryResult<string>(myTrie);
-            Random random = new Random();
-            for (int i = 0; i < 2000; ++i)
-            {
-                string key = string.Empty;
-                for (int j = 0; j < 20; ++j)
-                {
-                    key += new string[] { "", "k", "s", "t", "n", "h", "m", "y", "r", "w", "g", "z", "d", "p", "b" }[random.Next(0, 15)];
-                    key += "aiueo"[random.Next(0, 5)].ToString();
-                    key += "nm "[random.Next(0, 3)].ToString();
-                }
-                if (!myTrie.ContainsKey(key)) myTrie.Add(key, ((char)random.Next('一', '草')).ToString());
-            }
-        }
-
         private string queryWord;
 
         public string QueryWord
@@ -83,6 +63,11 @@ namespace NDictPlus.Model
                 queryWord = value;
                 Result.Query(value);
             }
+        }
+
+        public QueryModel()
+        {
+
         }
     }
 }
