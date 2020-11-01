@@ -6,11 +6,17 @@ using System.Text;
 
 namespace NDictPlus.Model
 {
+    public class UsageExample
+    {
+        public string Usage;
+        public string Meaning;
+    }
+
     public class PhraseDescription : INotifyPropertyChanged
     {
         private string partOfSpeech;
         private string pronunciation;
-        private string description;
+        private string meaning;
 
         public string PartOfSpeech
         {
@@ -34,18 +40,18 @@ namespace NDictPlus.Model
             }
         }
 
-        public string Description
+        public string Meaning
         {
-            get => description;
+            get => meaning;
 
             set
             {
-                description = value;
-                RaisePropertyChanged("Description");
+                meaning = value;
+                RaisePropertyChanged("Meaning");
             }
         }
 
-        public ObservableCollection<string> Examples { get; set; }
+        public ObservableCollection<UsageExample> Examples { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
