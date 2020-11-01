@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NDictPlus"
+        xmlns:local="clr-namespace:NDictPlus.ViewModel"
         mc:Ignorable="d"
         Title="NDictPlus" Height="450" Width="800">
     <Window.Resources>
-        <local:QueryModel x:Key="queryModel"/>
+        <local:QueryViewModel x:Key="queryViewModel"/>
     </Window.Resources>
     <DockPanel Background="#202025">
         <TextBox Name="queryBox"
@@ -17,11 +17,11 @@
                  TextAlignment="Center"
                  FontSize="30"
                  FontFamily="Lucida Sans Unicode"
-                 DataContext="{StaticResource queryModel}" 
+                 DataContext="{StaticResource queryViewModel}" 
                  Text="{Binding Path=QueryWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
         </TextBox>
         <ListView Name="queryResult" SelectedIndex="0"
-                  DataContext="{StaticResource queryModel}"
+                  DataContext="{StaticResource queryViewModel}"
                   ItemsSource="{Binding Path=Result}"
                   Background="#00000000"
                   Foreground="AntiqueWhite"

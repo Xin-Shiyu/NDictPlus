@@ -10,9 +10,9 @@ using System.Windows.Documents;
 
 namespace NDictPlus.Model
 {
-    class QueryModel
+    class WordQueryModel
     {
-        private Trie<string> myTrie;
+        private Trie<DescriptionModel> myTrie;
 
         public class TrieQueryResult<T> 
             : IEnumerable<KeyValuePair<string, T>>, INotifyCollectionChanged
@@ -50,7 +50,7 @@ namespace NDictPlus.Model
             }
         }
 
-        public TrieQueryResult<string> Result { get; private set; }
+        public TrieQueryResult<DescriptionModel> Result { get; private set; }
 
         private string queryWord;
 
@@ -65,9 +65,9 @@ namespace NDictPlus.Model
             }
         }
 
-        public QueryModel()
+        public WordQueryModel(Trie<DescriptionModel> trie)
         {
-
+            myTrie = trie;
         }
     }
 }
