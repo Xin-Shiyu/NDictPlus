@@ -6,10 +6,39 @@ using System.Text;
 
 namespace NDictPlus.Model
 {
-    public class UsageExample
+    public class UsageExample : INotifyPropertyChanged
     {
-        public string Usage;
-        public string Meaning;
+        private string usage;
+        private string meaning;
+
+        public string Usage
+        {
+            get => usage; 
+            
+            set
+            {
+                usage = value;
+                RaisePropertyChanged("Usage");
+            }
+        }
+
+        public string Meaning
+        {
+            get => meaning; 
+            
+            set
+            {
+                meaning = value;
+                RaisePropertyChanged("Meaning");
+            }
+        }
+
+        private void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class PhraseDescription : INotifyPropertyChanged
@@ -52,6 +81,8 @@ namespace NDictPlus.Model
         }
 
         public ObservableCollection<UsageExample> Examples { get; set; }
+
+        public ObservableCollection<string> RelatedPhrases { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

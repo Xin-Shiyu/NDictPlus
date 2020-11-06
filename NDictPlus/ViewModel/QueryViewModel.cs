@@ -7,6 +7,12 @@ namespace NDictPlus.ViewModel
 {
     class QueryViewModel
     {
-        
+        BookCollectionModel bookCollection = new BookCollectionModel();
+
+        public QueryViewModel()
+        {
+            bookCollection.Load();
+        }
+
     }
 }
