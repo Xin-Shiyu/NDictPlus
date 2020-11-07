@@ -24,6 +24,7 @@ namespace NDictPlus.Model
                             {
                                 new PhraseDescription
                                 {
+                                    Pronunciation = "pom",
                                     Meaning = "apple",
                                     PartOfSpeech = "n.f.",
                                     Examples = new ObservableCollection<UsageExample>
@@ -33,6 +34,30 @@ namespace NDictPlus.Model
                                             Usage = "J'aime manger les pommes.",
                                             Meaning = "I like eating apples."
                                         }
+                                    },
+                                    RelatedPhrases = new ObservableCollection<string>
+                                    {
+                                        "banane",
+                                        "fraise"
+                                    }
+                                },
+                                new PhraseDescription
+                                {
+                                    Pronunciation = "pom",
+                                    Meaning = "apple",
+                                    PartOfSpeech = "n.f.",
+                                    Examples = new ObservableCollection<UsageExample>
+                                    {
+                                        new UsageExample
+                                        {
+                                            Usage = "J'aime manger les pommes.",
+                                            Meaning = "I like eating apples."
+                                        }
+                                    },
+                                    RelatedPhrases = new ObservableCollection<string>
+                                    {
+                                        "banane",
+                                        "fraise"
                                     }
                                 }
                             }

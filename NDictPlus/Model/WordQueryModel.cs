@@ -12,9 +12,9 @@ namespace NDictPlus.Model
 {
     class WordQueryModel
     {
-        private Trie<DescriptionModel> myTrie;
+        private readonly Trie<DescriptionModel> myTrie;
 
-        public class TrieQueryResult<T> 
+        public class TrieQueryResult<T>
             : IEnumerable<KeyValuePair<string, T>>, INotifyCollectionChanged
             where T : class
         {
@@ -33,7 +33,7 @@ namespace NDictPlus.Model
             public void Query(string query)
             {
                 enumerator = source.BeginningWith(query).GetEnumerator();
-                CollectionChanged.Invoke(
+                CollectionChanged?.Invoke(
                     this,
                     new NotifyCollectionChangedEventArgs(
                         NotifyCollectionChangedAction.Reset));
@@ -52,6 +52,18 @@ namespace NDictPlus.Model
 
         public TrieQueryResult<DescriptionModel> Result { get; private set; }
 
+        public DescriptionModel ExactResult
+        {
+            get
+            {
+                if (myTrie.TryGetValue(queryWord, out var res))
+                {
+                    return res;
+                }
+                return null;
+            }
+        }
+
         private string queryWord;
 
         public string QueryWord
@@ -68,6 +80,7 @@ namespace NDictPlus.Model
         public WordQueryModel(Trie<DescriptionModel> trie)
         {
             myTrie = trie;
+            Result = new TrieQueryResult<DescriptionModel>(trie);
         }
     }
 }

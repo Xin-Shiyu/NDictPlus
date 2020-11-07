@@ -21,6 +21,21 @@ namespace NDictPlus
         public MainWindow()
         {
             InitializeComponent();
+            var view = new View.PhraseDetailView();
+            view.Phrase.Text = "pomme";
+            var model = new Model.BookCollectionModel();
+            model.Load();
+            var book = model
+                .bookModels["french"];
+            book.QueryWord = "pomme";
+            var enumerator = book.Result.GetEnumerator();
+            enumerator.MoveNext();
+            var item = enumerator.Current;
+            var descriptions = item.Value;
+            view
+                .Descriptions
+                .ItemsSource = descriptions;
+            ViewFrame.Content = view;
         }
     }
 }

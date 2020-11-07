@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:NDictPlus"
              StartupUri="View\MainWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>

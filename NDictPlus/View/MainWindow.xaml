@@ -6,34 +6,5 @@
         xmlns:local="clr-namespace:NDictPlus.ViewModel"
         mc:Ignorable="d"
         Title="NDictPlus" Height="450" Width="800">
-    <Window.Resources>
-        <local:QueryViewModel x:Key="queryViewModel"/>
-    </Window.Resources>
-    <DockPanel Background="#202025">
-        <TextBox Name="queryBox"
-                 Background="#00000000"
-                 Foreground="AntiqueWhite"
-                 DockPanel.Dock="Bottom"
-                 TextAlignment="Center"
-                 FontSize="30"
-                 FontFamily="Lucida Sans Unicode"
-                 DataContext="{StaticResource queryViewModel}" 
-                 Text="{Binding Path=QueryWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-        </TextBox>
-        <ListView Name="queryResult" SelectedIndex="0"
-                  DataContext="{StaticResource queryViewModel}"
-                  ItemsSource="{Binding Path=Result}"
-                  Background="#00000000"
-                  Foreground="AntiqueWhite"
-                  >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Key}"/>
-                        <TextBlock Text="{Binding Value}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </DockPanel>
+    <Frame Name="ViewFrame"/>
 </Window>
