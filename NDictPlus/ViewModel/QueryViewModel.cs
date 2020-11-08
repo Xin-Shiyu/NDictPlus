@@ -14,5 +14,7 @@ namespace NDictPlus.ViewModel
         {
             bookCollection.Load();
         }
+
+
     }
 }

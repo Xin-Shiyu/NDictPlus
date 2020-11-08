@@ -21,6 +21,7 @@ namespace NDictPlus
         public MainWindow()
         {
             InitializeComponent();
+            //*
             var view = new View.PhraseDetailView();
             view.Phrase.Text = "pomme";
             var model = new Model.BookCollectionModel();
@@ -36,6 +37,23 @@ namespace NDictPlus
                 .Descriptions
                 .ItemsSource = descriptions;
             ViewFrame.Content = view;
+            //*/
+            /*
+            var view = new View.QueryResultView();
+            var model = new Model.BookCollectionModel();
+            model.Load();
+            var book = model.bookModels["french"];
+            view.DataContext = book;
+            QueryBox.DataContext = book;
+            var binding = 
+                new Binding("QueryWord") 
+                { 
+                    Mode = BindingMode.TwoWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+            QueryBox.SetBinding(TextBox.TextProperty, binding);
+            ViewFrame.Content = view;
+            */
         }
     }
 }

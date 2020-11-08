@@ -5,6 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NDictPlus.ViewModel"
         mc:Ignorable="d"
-        Title="NDictPlus" Height="450" Width="800">
-    <Frame Name="ViewFrame"/>
+        Title="NDictPlus" Height="450" Width="350"
+        Background="#202025">
+    <DockPanel>
+        <TextBox Background="{x:Null}"
+                 Foreground="White"
+                 DockPanel.Dock="Bottom"
+                 FontSize="16"
+                 Name="QueryBox"/>
+        <Frame Name="ViewFrame"/>
+    </DockPanel>
 </Window>
