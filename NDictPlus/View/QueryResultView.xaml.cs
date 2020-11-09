@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace NDictPlus.View
 {
@@ -21,6 +22,27 @@ namespace NDictPlus.View
         public QueryResultView()
         {
             InitializeComponent();
+        }
+    }
+
+    [ValueConversion(typeof(int), typeof(string))]
+    class DescriptionLeftCountConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((int)value > 0)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return $"还有 {(int)value} 种解释";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
         }
     }
 }

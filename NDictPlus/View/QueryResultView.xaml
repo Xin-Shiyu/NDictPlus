@@ -8,6 +8,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="QueryResultView"
       Background="{x:Null}">
+    <Page.Resources>
+        <local:DescriptionLeftCountConverter x:Key="leftCountConverter"/>
+    </Page.Resources>
 
     <Grid>
         <ListView x:Name="Results" Background="{x:Null}" ItemsSource="{Binding Path=Result}">
@@ -18,10 +21,12 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="0,4,0,4" Background="#10808080">
+                    <Border Margin="0,4,0,4" Background="#10808080" HorizontalAlignment="Stretch">
                         <StackPanel Margin="16,8,16,8">
-                            <TextBlock Text="{Binding Path=Key}"/>
-                            <TextBlock Text="{Binding Path=Value}"/>
+                            <TextBlock Text="{Binding Path=Phrase}"/>
+                            <TextBlock Text="{Binding Path=PartOfSpeech}"/>
+                            <TextBlock Text="{Binding Path=Description}"/>
+                            <TextBlock Text="{Binding Path=LeftCount, Converter={StaticResource leftCountConverter}}"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>

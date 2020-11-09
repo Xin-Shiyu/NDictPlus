@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
 using Nativa;
+using NDictPlus.Utilities;
 
 namespace NDictPlus.Model
 {
     class BookCollectionModel
     {
-        public readonly Dictionary<string, WordQueryModel> bookModels =
-                new Dictionary<string, WordQueryModel>();
+        public readonly IDictionary<string, WordQueryModel> bookModels =
+                new ObservableDictionary<string, WordQueryModel>();
 
         public void Load()
         {

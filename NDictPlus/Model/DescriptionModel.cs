@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NDictPlus.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace NDictPlus.Model
 {
-    public class UsageExample : INotifyPropertyChanged
+    public class UsageExample : NotifyPropertyChangedBase
     {
         private string usage;
         private string meaning;
@@ -32,13 +33,6 @@ namespace NDictPlus.Model
                 RaisePropertyChanged("Meaning");
             }
         }
-
-        private void RaisePropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class PhraseDescription : INotifyPropertyChanged
