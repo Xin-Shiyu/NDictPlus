@@ -10,7 +10,7 @@ namespace NDictPlus
 {
     public partial class MainWindow : Window
     {
-        MainViewModel mainViewModel;
+        readonly MainViewModel mainViewModel;
         Dictionary<UIStates, Page> views;
         
         public MainWindow()
@@ -20,10 +20,10 @@ namespace NDictPlus
 
             views = new Dictionary<UIStates, Page>
             {
-                { UIStates.BookSelection, new BookListView()},
-                { UIStates.PhraseDisplay, new PhraseDetailView()},
-                { UIStates.PhraseQuery, new QueryResultView()},
-                { UIStates.PhraseCreation, new PhraseCreationView()},
+                { UIStates.BookSelection, new BookListView() },
+                { UIStates.PhraseDisplay, new PhraseDetailView() },
+                { UIStates.PhraseQuery, new QueryResultView() },
+                { UIStates.PhraseCreation, new PhraseCreationView() },
             };
 
             foreach (Page view in views.Values) 
@@ -33,7 +33,7 @@ namespace NDictPlus
 
             mainViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
-            ViewFrame.Content = new BookListView() { DataContext = mainViewModel };
+            ViewFrame.Content = views[UIStates.BookSelection];
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -41,7 +41,9 @@ namespace NDictPlus
             switch (e.PropertyName)
             {
                 case "UIState":
-                    ViewFrame.Content = views[mainViewModel.UIState];
+                    var newView = views[mainViewModel.UIState];
+                    newView.DataContext = mainViewModel;
+                    ViewFrame.Content = newView;
                     break;
                 default:
                     break;

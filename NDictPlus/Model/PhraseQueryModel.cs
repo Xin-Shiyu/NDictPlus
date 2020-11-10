@@ -10,7 +10,7 @@ using System.Windows.Documents;
 
 namespace NDictPlus.Model
 {
-    class WordQueryModel
+    class PhraseQueryModel
     {
         private readonly Trie<DescriptionModel> myTrie;
 
@@ -51,12 +51,14 @@ namespace NDictPlus.Model
         }
 
         public TrieQueryResult<DescriptionModel> Result { get; private set; }
+        
+        public int PhraseCount { get => myTrie.Count; }
 
         public DescriptionModel ExactResult
         {
             get
             {
-                if (myTrie.TryGetValue(queryWord, out var res))
+                if (myTrie.TryGetValue(queryPhrase, out var res))
                 {
                     return res;
                 }
@@ -64,20 +66,20 @@ namespace NDictPlus.Model
             }
         }
 
-        private string queryWord;
+        private string queryPhrase;
 
-        public string QueryWord
+        public string QueryPhrase
         {
-            get => queryWord;
+            get => queryPhrase;
 
             set
             {
-                queryWord = value;
+                queryPhrase = value;
                 Result.Query(value);
             }
         }
 
-        public WordQueryModel(Trie<DescriptionModel> trie)
+        public PhraseQueryModel(Trie<DescriptionModel> trie)
         {
             myTrie = trie;
             Result = new TrieQueryResult<DescriptionModel>(trie);

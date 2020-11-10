@@ -9,13 +9,39 @@
       Title="BookListView"
       Foreground="White"
       Background="{x:Null}">
-    <Grid>
-        <ListView x:Name="Results" Background="{x:Null}" ItemsSource="{Binding Path=BookNameList}">
-            <ListView.ItemTemplate>
+    <Page.Resources>
+        <local:EntryCountConverter x:Key="entryCountConverter"/>
+    </Page.Resources>
+    <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding Path=BookList}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}"/>
+                    <Button Click="Button_Click">
+                        <ButtonBase.Template>
+                            <ControlTemplate>
+                                <Border Margin="0,4,0,4" 
+                                        Style="{StaticResource Selectable}">
+                                    <DockPanel Margin="8,8,8,8">
+                                        <TextBlock Text="{Binding Path=EntryCount, Converter={StaticResource entryCountConverter}}"
+                                                   Foreground="White"
+                                                   FontSize="10"
+                                                   DockPanel.Dock="Right"/>
+                                        <TextBlock Text="{Binding Path=Name}"
+                                                   Foreground="White"
+                                                   FontWeight="Light"
+                                                   FontSize="16"/>
+                                    </DockPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </ButtonBase.Template>
+                    </Button>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </Grid>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </Page>

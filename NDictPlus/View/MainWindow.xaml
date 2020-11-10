@@ -13,6 +13,6 @@
                  DockPanel.Dock="Bottom"
                  FontSize="16"
                  Name="QueryBox"/>
-        <Frame Name="ViewFrame"/>
+        <Frame Name="ViewFrame" NavigationUIVisibility="Hidden"/>
     </DockPanel>
 </Window>

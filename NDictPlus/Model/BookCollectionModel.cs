@@ -9,14 +9,14 @@ namespace NDictPlus.Model
 {
     class BookCollectionModel
     {
-        public readonly IDictionary<string, WordQueryModel> bookModels =
-                new ObservableDictionary<string, WordQueryModel>();
+        public readonly IDictionary<string, PhraseQueryModel> bookModels =
+            new ObservableDictionary<string, PhraseQueryModel>();
 
         public void Load()
         {
             bookModels.Add(
                 "french",
-                new WordQueryModel(
+                new PhraseQueryModel(
                     new Trie<DescriptionModel>()
                     {
                         {
@@ -66,7 +66,7 @@ namespace NDictPlus.Model
                     }));
             bookModels.Add(
                 "japanese",
-                new WordQueryModel(
+                new PhraseQueryModel(
                     new Trie<DescriptionModel>()
                     {
                         {

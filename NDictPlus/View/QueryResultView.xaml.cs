@@ -11,12 +11,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Globalization;
+using NDictPlus.Utilities;
 
 namespace NDictPlus.View
 {
-    /// <summary>
-    /// QueryResultView.xaml 的交互逻辑
-    /// </summary>
     public partial class QueryResultView : Page
     {
         public QueryResultView()
@@ -24,7 +22,7 @@ namespace NDictPlus.View
             InitializeComponent();
         }
     }
-
+    
     [ValueConversion(typeof(int), typeof(string))]
     class DescriptionLeftCountConverter : IValueConverter
     {
@@ -36,7 +34,7 @@ namespace NDictPlus.View
             }
             else
             {
-                return $"还有 {(int)value} 种解释";
+                return $"{(int)value} more descriptions";
             }
         }
 

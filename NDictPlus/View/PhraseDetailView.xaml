@@ -55,7 +55,8 @@
                                         <DataTemplate>
                                             <Button Content="{Binding}"
                                                     Foreground="White"
-                                                    Click="Button_Click">
+                                                    Command="{Binding VisitPhraseCommand}"
+                                                    CommandParameter="{Binding}">
                                                 <ButtonBase.Template>
                                                     <ControlTemplate>
                                                         <Border Style="{StaticResource Tag}">
