@@ -30,11 +30,11 @@ namespace NDictPlus.ViewModel
         string _currentBookName = string.Empty;
         string _queryString;
         UIStates _uiState;
-        private IEnumerable<BookViewModel> bookList;
-        private IEnumerable<PartialPhraseViewModel> result;
-        private ICommand openBookCommand;
-        private ICommand visitPhraseCommand;
-        private ICommand loadMoreResultCommand;
+        private IEnumerable<BookViewModel> _bookList;
+        private IEnumerable<PartialPhraseViewModel> _result;
+        private ICommand _openBookCommand;
+        private ICommand _visitPhraseCommand;
+        private ICommand _loadMoreResultCommand;
 
         private bool TryOpenBook(string bookName)
         {
@@ -85,10 +85,10 @@ namespace NDictPlus.ViewModel
 
         public IEnumerable<BookViewModel> BookList
         {
-            get => bookList;
+            get => _bookList;
             private set
             {
-                bookList = value;
+                _bookList = value;
                 RaisePropertyChanged("BookList");
             }
         }
@@ -107,29 +107,29 @@ namespace NDictPlus.ViewModel
 
         public ICommand OpenBookCommand
         {
-            get => openBookCommand;
+            get => _openBookCommand;
             private set
             {
-                openBookCommand = value;
+                _openBookCommand = value;
                 RaisePropertyChanged("OpenBookCommand");
             }
         }
         public ICommand VisitPhraseCommand
         {
-            get => visitPhraseCommand;
+            get => _visitPhraseCommand;
             private set
             {
-                visitPhraseCommand = value;
+                _visitPhraseCommand = value;
                 RaisePropertyChanged("VisitPhraseCommand");
             }
         }
 
         public ICommand LoadMoreResultCommand
         {
-            get => loadMoreResultCommand;
+            get => _loadMoreResultCommand;
             private set
             {
-                loadMoreResultCommand = value;
+                _loadMoreResultCommand = value;
                 RaisePropertyChanged("LoadMoreResultCommand");
             }
         }
@@ -154,9 +154,9 @@ namespace NDictPlus.ViewModel
                 new DelegateCommand<string>(
                     phrase =>
                     {
+
                         UIState = UIStates.PhraseDisplay;
-                    }
-                    );
+                    });
 
             OpenBookCommand =
                 new DelegateCommand<string>(
@@ -169,10 +169,10 @@ namespace NDictPlus.ViewModel
 
         public IEnumerable<PartialPhraseViewModel> Result
         {
-            get => result;
+            get => _result;
             private set
             {
-                result = value;
+                _result = value;
                 RaisePropertyChanged("Result");
             }
         }

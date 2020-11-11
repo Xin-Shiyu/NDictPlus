@@ -28,6 +28,13 @@ namespace NDictPlus.Utilities
             }
         }
 
+        public void Refresh()
+        {
+            enumerator = underlying.GetEnumerator();
+            enumerator.MoveNext();
+            LoadMore();
+        }
+
         public LazyLoadCollection(IEnumerable<T> underlying, int eachTimeCount = 10)
         {
             this.underlying = underlying;
@@ -36,9 +43,7 @@ namespace NDictPlus.Utilities
             {
                 notifiable.CollectionChanged += Notifiable_CollectionChanged;
             }
-            enumerator = underlying.GetEnumerator();
-            enumerator.MoveNext();
-            LoadMore();
+            Refresh();
         }
 
         private void Notifiable_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

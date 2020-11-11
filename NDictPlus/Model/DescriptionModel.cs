@@ -35,7 +35,7 @@ namespace NDictPlus.Model
         }
     }
 
-    public class PhraseDescription : INotifyPropertyChanged
+    public class PhraseDescription : NotifyPropertyChangedBase
     {
         private string partOfSpeech;
         private string pronunciation;
@@ -77,13 +77,6 @@ namespace NDictPlus.Model
         public ObservableCollection<UsageExample> Examples { get; set; }
 
         public ObservableCollection<string> RelatedPhrases { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void RaisePropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     class DescriptionModel : ObservableCollection<PhraseDescription> {}
