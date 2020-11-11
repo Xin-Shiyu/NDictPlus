@@ -22,7 +22,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Click="OnItemClick">
+                    <Button 
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.OpenBookCommand}"
+                        CommandParameter="{Binding Path=Name}">
                         <ButtonBase.Template>
                             <ControlTemplate>
                                 <Border Margin="0,4,0,4" 

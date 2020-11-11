@@ -23,15 +23,6 @@ namespace NDictPlus.View
             InitializeComponent();
         }
 
-        private void OnItemClick(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button)
-                if (DataContext.GetType()
-                    .GetProperty("VisitPhraseCommand")
-                    .GetValue(DataContext) is ICommand command)
-                    command.Execute(string.Empty);
-        }
-
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (e.ViewportHeight + e.VerticalOffset + 5 >= e.ExtentHeight)

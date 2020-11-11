@@ -20,17 +20,6 @@ namespace NDictPlus.View
         {
             InitializeComponent();
         }
-
-        private void OnItemClick(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button)
-                if (DataContext.GetType()
-                    .GetProperty("OpenBookCommand")
-                    .GetValue(DataContext) is ICommand command)
-                    command.Execute(button.DataContext.GetType()
-                                                      .GetProperty("Name")
-                                                      .GetValue(button.DataContext));
-        }
     }
 
     [ValueConversion(typeof(int), typeof(string))]
