@@ -14,6 +14,8 @@ namespace NDictPlus.Model
 
         public void Load()
         {
+            var ha = new Trie<DescriptionModel>();
+            for (int i = 0; i < 100; ++i) ha.Add(i.ToString(), new DescriptionModel());
             bookModels.Add(
                 "french",
                 new PhraseQueryModel(
@@ -45,9 +47,26 @@ namespace NDictPlus.Model
                             }
                         },
                         {
+                            "haha",
+                            new DescriptionModel()
+                        },
+                        {
                             "pain",
                             new DescriptionModel
                             {
+                                new PhraseDescription
+                                {
+                                    Meaning = "bread",
+                                    PartOfSpeech = "n.m.",
+                                    Examples = new ObservableCollection<UsageExample>
+                                    {
+                                        new UsageExample
+                                        {
+                                            Usage = "Les pains et les baguettes.",
+                                            Meaning = "Bread and baguettes."
+                                        }
+                                    }
+                                },
                                 new PhraseDescription
                                 {
                                     Meaning = "bread",
@@ -66,7 +85,8 @@ namespace NDictPlus.Model
                     }));
             bookModels.Add(
                 "japanese",
-                new PhraseQueryModel(
+                new PhraseQueryModel(ha
+                    /*
                     new Trie<DescriptionModel>()
                     {
                         {
@@ -107,7 +127,7 @@ namespace NDictPlus.Model
                                 }
                             }
                         },
-                    }));
+                    }*/));
         }
 
         public void Save()

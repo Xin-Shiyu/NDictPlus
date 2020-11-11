@@ -27,7 +27,7 @@
             <Setter Property="Foreground" Value="#50FFFFFF"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate>
+                    <ControlTemplate TargetType="Button">
                         <Border Margin="0,4,0,4" Background="#10808080">
                             <ContentPresenter
                                     VerticalAlignment="Center"
@@ -41,6 +41,34 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="BarButton">
+            <Setter Property="Background" Value="#00000000" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <TextBlock 
+                                Margin="8,0,8,0"
+                                Foreground="{TemplateBinding Foreground}"
+                                Text="{TemplateBinding Content}"
+                                VerticalAlignment="Center"
+                                FontSize="16"/>
+                            <Grid.InputBindings>
+                                <MouseBinding 
+                                    MouseAction="{x:Static MouseAction.LeftClick}"
+                                    Command="{TemplateBinding Command}"
+                                    CommandParameter="{TemplateBinding CommandParameter}"/>
+                            </Grid.InputBindings>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#20DDDDFF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

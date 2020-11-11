@@ -8,11 +8,24 @@
         Title="NDictPlus" Height="450" Width="350"
         Background="#202025">
     <DockPanel>
-        <TextBox Background="{x:Null}"
-                 Foreground="White"
-                 DockPanel.Dock="Bottom"
-                 FontSize="16"
-                 Name="QueryBox"/>
+        <DockPanel DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <TextBlock Text="{Binding CurrentBookName}"
+                       DockPanel.Dock="Left"
+                       FontSize="16"
+                       Foreground="White"/>
+                <TextBlock Text=">"
+                           FontSize="16"
+                           Foreground="White"/>
+            </StackPanel>
+            <TextBox Background="{x:Null}"
+                     Foreground="White"
+                     FontSize="16"
+                     Name="QueryBox"
+                     BorderBrush="{x:Null}"
+                     Text="{Binding QueryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
         <Frame Name="ViewFrame" NavigationUIVisibility="Hidden"/>
     </DockPanel>
 </Window>

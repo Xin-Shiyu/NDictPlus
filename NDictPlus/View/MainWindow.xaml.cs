@@ -11,7 +11,7 @@ namespace NDictPlus
     public partial class MainWindow : Window
     {
         readonly MainViewModel mainViewModel;
-        Dictionary<UIStates, Page> views;
+        readonly Dictionary<UIStates, Page> views;
         
         public MainWindow()
         {
@@ -26,6 +26,7 @@ namespace NDictPlus
                 { UIStates.PhraseCreation, new PhraseCreationView() },
             };
 
+            this.DataContext = mainViewModel;
             foreach (Page view in views.Values) 
             {
                 view.DataContext = mainViewModel;
@@ -41,9 +42,7 @@ namespace NDictPlus
             switch (e.PropertyName)
             {
                 case "UIState":
-                    var newView = views[mainViewModel.UIState];
-                    newView.DataContext = mainViewModel;
-                    ViewFrame.Content = newView;
+                    ViewFrame.Content = views[mainViewModel.UIState];
                     break;
                 default:
                     break;

@@ -25,28 +25,35 @@ namespace NDictPlus.ViewModel
     {
         readonly BookCollectionModel bookCollectionModel;
         PhraseQueryModel currentModel = null;
-        string currentBookName = string.Empty;
-        string queryWord;
-        UIStates _uiState; // never use this directly!
+
+        // never use theses directly!
+        string _currentBookName = string.Empty;
+        string _queryString;
+        UIStates _uiState;
+        private IEnumerable<BookViewModel> bookList;
+        private IEnumerable<PartialPhraseViewModel> result;
+        private ICommand openBookCommand;
+        private ICommand visitPhraseCommand;
+        private ICommand loadMoreResultCommand;
 
         private bool TryOpenBook(string bookName)
         {
             if (bookName == string.Empty)
             {
                 currentModel = null; // closes the book
-                currentBookName = string.Empty;
+                CurrentBookName = string.Empty;
                 UIState = UIStates.BookSelection;
                 return true;
             }
-            else if (bookName != currentBookName)
+            else if (bookName != _currentBookName)
             {
-                bool opened = 
+                bool opened =
                     bookCollectionModel.bookModels.TryGetValue(bookName, out var properModel);
                 if (opened)
                 {
                     currentModel = properModel;
-                    currentBookName = bookName;
-                    Result =
+                    CurrentBookName = bookName;
+                    var lazyCollection =
                         new LazyLoadCollection<PartialPhraseViewModel>(
                             new ObservableCollectionMapper<
                                 KeyValuePair<string, DescriptionModel>,
@@ -55,23 +62,36 @@ namespace NDictPlus.ViewModel
                                 pair =>
                                 {
                                     (var phrase, var model) = pair;
-                                    var first = model?[0];
+                                    var count = model.Count;
+                                    var first = count != 0 ? model[0] : null;
                                     return new PartialPhraseViewModel
                                     {
                                         Phrase = phrase,
                                         PartOfSpeech = first?.PartOfSpeech,
                                         Description = first?.Meaning,
-                                        LeftCount = model.Count - 1
+                                        LeftCount = count - 1
                                     };
                                 }
                             ));
+                    LoadMoreResultCommand =
+                        new DelegateCommand(lazyCollection.LoadMore);
+                    Result = lazyCollection;
+                    UIState = UIStates.PhraseQuery;
                 }
                 return opened;
             }
             return false;
         }
 
-        public IEnumerable<BookViewModel> BookList { get; private set; }
+        public IEnumerable<BookViewModel> BookList
+        {
+            get => bookList;
+            private set
+            {
+                bookList = value;
+                RaisePropertyChanged("BookList");
+            }
+        }
 
         public UIStates UIState
         {
@@ -85,8 +105,34 @@ namespace NDictPlus.ViewModel
             }
         }
 
-        public ICommand OpenBookCommand { get; private set; }
-        public ICommand VisitPhraseCommand { get; private set; }
+        public ICommand OpenBookCommand
+        {
+            get => openBookCommand;
+            private set
+            {
+                openBookCommand = value;
+                RaisePropertyChanged("OpenBookCommand");
+            }
+        }
+        public ICommand VisitPhraseCommand
+        {
+            get => visitPhraseCommand;
+            private set
+            {
+                visitPhraseCommand = value;
+                RaisePropertyChanged("VisitPhraseCommand");
+            }
+        }
+
+        public ICommand LoadMoreResultCommand
+        {
+            get => loadMoreResultCommand;
+            private set
+            {
+                loadMoreResultCommand = value;
+                RaisePropertyChanged("LoadMoreResultCommand");
+            }
+        }
 
         public MainViewModel()
         {
@@ -111,35 +157,51 @@ namespace NDictPlus.ViewModel
                         UIState = UIStates.PhraseDisplay;
                     }
                     );
+
             OpenBookCommand =
                 new DelegateCommand<string>(
                     bookName =>
                     {
-                        if (TryOpenBook(bookName))
-                        {
-                            UIState = UIStates.PhraseQuery;
-                        }
-                    }
-                    );
+                        _ = TryOpenBook(bookName);
+                        // TO-DO: Handle situation when book does not exist
+                    });
         }
 
-        public IEnumerable<PartialPhraseViewModel> Result { get; private set; }
+        public IEnumerable<PartialPhraseViewModel> Result
+        {
+            get => result;
+            private set
+            {
+                result = value;
+                RaisePropertyChanged("Result");
+            }
+        }
 
         // IEnumerator<KeyValuePair<string, DescriptionModel>> phraseEnumerator;
 
-        public void TryLoadMoreResult()
+        public string QueryString
         {
-            
-        }
-
-        public string QueryWord
-        {
-            get => queryWord;
+            get => _queryString;
 
             set
             {
-                queryWord = value;
+                _queryString = value;
+                if (currentModel != null)
+                {
+                    currentModel.QueryPhrase = QueryString;
+                }
+                RaisePropertyChanged("QueryString");
+            }
+        }
 
+        public string CurrentBookName
+        {
+            get => _currentBookName;
+
+            set
+            {
+                _currentBookName = value;
+                RaisePropertyChanged("CurrentBookName");
             }
         }
     }

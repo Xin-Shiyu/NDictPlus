@@ -16,12 +16,13 @@
         </Style>
     </Page.Resources>
     <DockPanel>
-        <Grid DockPanel.Dock="Top" Background="#10808080" Margin="0,0,0,4">
+        <Border DockPanel.Dock="Top" Background="#10808080" Margin="0,0,0,4">
             <TextBlock x:Name="Phrase" Margin="16,8,16,8" FontSize="32" FontWeight="ExtraBold"/>
-        </Grid>
-        <ScrollViewer>
+        </Border>
+        <ScrollViewer
+            PanningMode="VerticalOnly">
             <StackPanel>
-                <ItemsControl x:Name="Descriptions">
+                <ItemsControl x:Name="Descriptions" ItemsSource="{Binding}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="0,4,0,4" Background="#10808080">

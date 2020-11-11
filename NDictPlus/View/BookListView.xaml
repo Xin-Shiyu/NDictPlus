@@ -12,7 +12,8 @@
     <Page.Resources>
         <local:EntryCountConverter x:Key="entryCountConverter"/>
     </Page.Resources>
-    <ScrollViewer>
+    <ScrollViewer
+        PanningMode="VerticalOnly">
         <ItemsControl ItemsSource="{Binding Path=BookList}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -21,7 +22,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Click="Button_Click">
+                    <Button Click="OnItemClick">
                         <ButtonBase.Template>
                             <ControlTemplate>
                                 <Border Margin="0,4,0,4" 

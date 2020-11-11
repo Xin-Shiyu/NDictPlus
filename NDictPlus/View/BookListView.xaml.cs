@@ -21,7 +21,7 @@ namespace NDictPlus.View
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OnItemClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
                 if (DataContext.GetType()
