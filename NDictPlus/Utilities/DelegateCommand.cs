@@ -9,7 +9,7 @@ namespace NDictPlus.Utilities
         where T : class
     {
         readonly Action<T> action;
-        bool canExecute;
+        bool canExecute = true;
 
         public DelegateCommand(Action<T> action)
         {
@@ -35,7 +35,7 @@ namespace NDictPlus.Utilities
     class DelegateCommand : ICommand
     {
         readonly Action action;
-        bool canExecute;
+        bool canExecute = true;
 
         public DelegateCommand(Action action)
         {
