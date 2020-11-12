@@ -7,77 +7,25 @@ using System.Text;
 
 namespace NDictPlus.Model
 {
-    public class UsageExample : NotifyPropertyChangedBase
+    public class UsageExampleModel
     {
-        private string usage;
-        private string meaning;
+        public string Usage { get; set; }
 
-        public string Usage
-        {
-            get => usage; 
-            
-            set
-            {
-                usage = value;
-                RaisePropertyChanged("Usage");
-            }
-        }
-
-        public string Meaning
-        {
-            get => meaning; 
-            
-            set
-            {
-                meaning = value;
-                RaisePropertyChanged("Meaning");
-            }
-        }
+        public string Meaning { get; set; }
     }
 
-    public class PhraseDescription : NotifyPropertyChangedBase
+    public class SingleDescriptionModel
     {
-        private string partOfSpeech;
-        private string pronunciation;
-        private string meaning;
+        public string PartOfSpeech { get; set; }
 
-        public string PartOfSpeech
-        {
-            get => partOfSpeech;
+        public string Pronunciation { get; set; }
 
-            set
-            {
-                partOfSpeech = value;
-                RaisePropertyChanged("PartOfSpeech");
-            }
-        }
+        public string Meaning { get; set; }
 
-        public string Pronunciation
-        {
-            get => pronunciation;
-
-            set
-            {
-                pronunciation = value;
-                RaisePropertyChanged("Pronunciation");
-            }
-        }
-
-        public string Meaning
-        {
-            get => meaning;
-
-            set
-            {
-                meaning = value;
-                RaisePropertyChanged("Meaning");
-            }
-        }
-
-        public ObservableCollection<UsageExample> Examples { get; set; }
+        public ObservableCollection<UsageExampleModel> Examples { get; set; }
 
         public ObservableCollection<string> RelatedPhrases { get; set; }
     }
 
-    class DescriptionModel : ObservableCollection<PhraseDescription> {}
+    class DescriptionModel : ObservableCollection<SingleDescriptionModel> {}
 }

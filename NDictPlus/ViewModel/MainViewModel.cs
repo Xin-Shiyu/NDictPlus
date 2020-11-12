@@ -1,14 +1,7 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Input;
-using NDictPlus.Model;
+﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace NDictPlus.ViewModel
 {
