@@ -89,9 +89,18 @@ namespace NDictPlus.ViewModel
 
         public ObservableCollection<string> RelatedPhrases 
         {
-            // because the type is so trivial so there is no magic
+            // the type is so trivial that there is no magic
             get => _model.RelatedPhrases;
-            set => _model.RelatedPhrases = value; 
+            // there is no need to listen to the event because as the view binds,
+            // it actually gets the ref to the real collection in the real model
+            // and it should handle all these event firing stuffs and so on
+            set
+            {
+                _model.RelatedPhrases = value;
+                RaisePropertyChanged("RelatedPhrases");
+                // i'm just not so sure about the view
+                // this won't cost much huh
+            }
         }
     }
 
