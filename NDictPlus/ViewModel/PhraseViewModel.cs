@@ -1,5 +1,4 @@
-﻿using Accessibility;
-using NDictPlus.Model;
+﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
 using System;
 using System.Collections.Generic;
@@ -104,7 +103,7 @@ namespace NDictPlus.ViewModel
         }
     }
 
-    class PhraseViewModel
+    public class PhraseViewModel
     {
         public string Phrase { get; private set; }
 

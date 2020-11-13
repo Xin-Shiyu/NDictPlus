@@ -66,4 +66,14 @@ namespace NDictPlus.View
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => null;
     }
+
+    [ValueConversion(typeof(string), typeof(string))]
+    class AddPhraseButtonTextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => $"Add phrase \"{value}\"";
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => null;
+    }
 }

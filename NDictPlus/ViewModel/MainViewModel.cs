@@ -1,6 +1,8 @@
 ﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace NDictPlus.ViewModel
@@ -10,14 +12,13 @@ namespace NDictPlus.ViewModel
         BookSelection,
         BookCreation,
         PhraseQuery,
-        PhraseCreation,
         PhraseDisplay,
     }
 
     public class MainViewModel : NotifyPropertyChangedBase
     {
         readonly BookCollectionModel bookCollectionModel;
-        PhraseQueryModel currentModel = null;
+        BookModel currentModel = null;
 
         // never use theses directly!
         string _currentBookName = string.Empty;
@@ -25,9 +26,12 @@ namespace NDictPlus.ViewModel
         UIStates _uiState;
         private IEnumerable<BookViewModel> _bookList;
         private IEnumerable<PartialPhraseViewModel> _result;
+        private PhraseViewModel _currentPhraseDetail;
         private ICommand _openBookCommand;
         private ICommand _visitPhraseCommand;
         private ICommand _loadMoreResultCommand;
+        private ICommand _createPhraseCommand;
+        private ICommand _shortcutCommand;
 
         private bool TryOpenBook(string bookName)
         {
@@ -51,7 +55,7 @@ namespace NDictPlus.ViewModel
                             new ObservableCollectionMapper<
                                 KeyValuePair<string, DescriptionModel>,
                                 PartialPhraseViewModel>(
-                                properModel.Result,
+                                properModel.QueryModel,
                                 pair =>
                                 {
                                     (var phrase, var model) = pair;
@@ -127,13 +131,33 @@ namespace NDictPlus.ViewModel
             }
         }
 
+        public ICommand CreatePhraseCommand
+        {
+            get => _createPhraseCommand;
+            private set
+            {
+                _createPhraseCommand = value;
+                RaisePropertyChanged("CreatePhraseCommand");
+            }
+        }
+
+        public ICommand ShortcutCommand
+        {
+            get => _shortcutCommand;
+            private set
+            {
+                _shortcutCommand = value;
+                RaisePropertyChanged("ShortcutCommand");
+            }
+        }
+
         public MainViewModel()
         {
             bookCollectionModel = new BookCollectionModel();
             bookCollectionModel.Load();
             BookList =
                 new ObservableCollectionMapper
-                <KeyValuePair<string, PhraseQueryModel>, BookViewModel>
+                <KeyValuePair<string, BookModel>, BookViewModel>
                 (
                     bookCollectionModel.bookModels,
                     model => new BookViewModel
@@ -144,12 +168,7 @@ namespace NDictPlus.ViewModel
                 );
 
             VisitPhraseCommand =
-                new DelegateCommand<string>(
-                    phrase =>
-                    {
-
-                        UIState = UIStates.PhraseDisplay;
-                    });
+                new DelegateCommand<string>(VisitPhrase);
 
             OpenBookCommand =
                 new DelegateCommand<string>(
@@ -158,6 +177,21 @@ namespace NDictPlus.ViewModel
                         _ = TryOpenBook(bookName);
                         // TO-DO: Handle situation when book does not exist
                     });
+
+            CreatePhraseCommand =
+                new DelegateCommand<string>(
+                    phrase =>
+                    {
+                        currentModel.Create(phrase);
+                        VisitPhrase(phrase);
+                    },
+                    canExecuteNow: false);
+        }
+
+        private void VisitPhrase(string phrase)
+        {
+            CurrentPhraseDetail = new PhraseViewModel(phrase, currentModel.GetExactResult(phrase));
+            UIState = UIStates.PhraseDisplay;
         }
 
         public IEnumerable<PartialPhraseViewModel> Result
@@ -179,9 +213,33 @@ namespace NDictPlus.ViewModel
             set
             {
                 _queryString = value;
-                if (currentModel != null)
+                switch (UIState)
                 {
-                    currentModel.QueryPhrase = QueryString;
+                    case UIStates.PhraseQuery:
+                        {
+                            currentModel.QueryModel.Query(value);
+
+                            var isValidQuery = value != string.Empty;
+                            var hasExactMatch = isValidQuery && currentModel.Exists(value);
+
+                            if (Result.Count() == 1 && hasExactMatch) // auto visit
+                            {
+                                VisitPhrase(value);
+                                break;
+                            }
+
+                            (CreatePhraseCommand as DelegateCommand<string>)?
+                                .LetExecutableIf(isValidQuery && !hasExactMatch);
+
+                            break;
+                        }
+                    case UIStates.PhraseDisplay:
+                        {
+                            UIState = UIStates.PhraseQuery;
+                            goto case UIStates.PhraseQuery;
+                        }
+                    default:
+                        break;
                 }
                 RaisePropertyChanged("QueryString");
             }
@@ -195,6 +253,17 @@ namespace NDictPlus.ViewModel
             {
                 _currentBookName = value;
                 RaisePropertyChanged("CurrentBookName");
+            }
+        }
+
+        public PhraseViewModel CurrentPhraseDetail
+        {
+            get => _currentPhraseDetail;
+
+            set
+            {
+                _currentPhraseDetail = value;
+                RaisePropertyChanged("CurrentPhraseDetail");
             }
         }
     }

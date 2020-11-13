@@ -9,17 +9,19 @@ namespace NDictPlus.Utilities
         where T : class
     {
         readonly Action<T> action;
-        bool canExecute = true;
+        bool canExecute;
 
-        public DelegateCommand(Action<T> action)
+        public DelegateCommand(Action<T> action, bool canExecuteNow = true)
         {
             this.action = action;
+            this.canExecute = canExecuteNow;
         }
 
         public event EventHandler CanExecuteChanged;
 
-        public void ChangeCanExecute(bool value)
+        public void LetExecutableIf(bool value)
         {
+            if (value == canExecute) return;
             canExecute = value;
             CanExecuteChanged(this, EventArgs.Empty);
         }
@@ -35,16 +37,17 @@ namespace NDictPlus.Utilities
     class DelegateCommand : ICommand
     {
         readonly Action action;
-        bool canExecute = true;
+        bool canExecute;
 
-        public DelegateCommand(Action action)
+        public DelegateCommand(Action action, bool canExecuteNow = true)
         {
             this.action = action;
+            this.canExecute = canExecuteNow;
         }
 
         public event EventHandler CanExecuteChanged;
 
-        public void ChangeCanExecute(bool value)
+        public void UpdateExecutablity(bool value)
         {
             canExecute = value;
             CanExecuteChanged(this, EventArgs.Empty);

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NDictPlus.ViewModel"
         mc:Ignorable="d"
         Title="NDictPlus" Height="450" Width="350"
         Background="#202025">
@@ -24,8 +23,19 @@
                      FontSize="16"
                      Name="QueryBox"
                      BorderBrush="{x:Null}"
-                     Text="{Binding QueryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding QueryString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings>
+                    <KeyBinding 
+                        Command="{Binding Path=ShortcutCommand}"
+                        CommandParameter="{Binding Path=QueryString}"
+                        Key="Return"/>
+                </TextBox.InputBindings>
+            </TextBox>
         </DockPanel>
-        <Frame Name="ViewFrame" NavigationUIVisibility="Hidden"/>
+        <Frame Name="PageContainer"
+               NavigationUIVisibility="Hidden" 
+               Focusable="False"
+               Navigated="PageContainer_Navigated"
+               JournalOwnership="OwnsJournal"/>
     </DockPanel>
 </Window>

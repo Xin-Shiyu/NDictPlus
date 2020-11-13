@@ -54,7 +54,7 @@ namespace Nativa
 
         public ICollection<TValue> Values => throw new NotSupportedException();
 
-        public int Count { get; private set; }
+        public int Count { get; private set; } = 0;
 
         public bool IsReadOnly => false;
 

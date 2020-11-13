@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text;
+using System.Windows;
 
 namespace NDictPlus.Utilities
 {
@@ -17,21 +18,18 @@ namespace NDictPlus.Utilities
         public void LoadMore()
         {
             if (finished) return;
-            for (int i = 0; i < eachTimeCount; ++i)
+            int loaded = 0;
+            while (enumerator.MoveNext())
             {
                 Add(enumerator.Current);
-                if (!enumerator.MoveNext())
-                {
-                    finished = true;
-                    break;
-                }
+                if (++loaded == eachTimeCount) return;
             }
+            finished = true;
         }
 
         public void Refresh()
         {
             enumerator = underlying.GetEnumerator();
-            enumerator.MoveNext();
             LoadMore();
         }
 
@@ -51,8 +49,7 @@ namespace NDictPlus.Utilities
             Clear();
             enumerator = underlying.GetEnumerator();
             finished = false;
-            enumerator.MoveNext();
-            LoadMore();
+            LoadMore(); 
         }
     }
 }

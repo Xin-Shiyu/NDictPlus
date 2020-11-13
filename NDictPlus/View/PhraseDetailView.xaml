@@ -15,14 +15,14 @@
             <Setter Property="Margin" Value="0,14,0,4"/>
         </Style>
     </Page.Resources>
-    <DockPanel>
+    <DockPanel DataContext="{Binding Path=CurrentPhraseDetail}">
         <Border DockPanel.Dock="Top" Background="#10808080" Margin="0,0,0,4">
-            <TextBlock x:Name="Phrase" Margin="16,8,16,8" FontSize="32" FontWeight="ExtraBold"/>
+            <TextBlock Text="{Binding Phrase}" Margin="16,8,16,8" FontSize="32" FontWeight="ExtraBold"/>
         </Border>
         <ScrollViewer
             PanningMode="VerticalOnly">
             <StackPanel>
-                <ItemsControl x:Name="Descriptions" ItemsSource="{Binding}">
+                <ItemsControl x:Name="Descriptions" ItemsSource="{Binding Descriptions}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Margin="0,4,0,4" Background="#10808080">
@@ -56,7 +56,7 @@
                                         <DataTemplate>
                                             <Button Content="{Binding}"
                                                     Foreground="White"
-                                                    Command="{Binding VisitPhraseCommand}"
+                                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.VisitPhraseCommand}"
                                                     CommandParameter="{Binding}">
                                                 <ButtonBase.Template>
                                                     <ControlTemplate>
@@ -76,7 +76,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-                <Button Content="Add more..." Style="{StaticResource AppendButton}"/>
+                <Button Content="Add more..." Style="{StaticResource ListButton}"/>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

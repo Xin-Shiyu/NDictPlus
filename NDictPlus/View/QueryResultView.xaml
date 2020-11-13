@@ -12,91 +12,65 @@
     <Page.Resources>
         <local:DescriptionLeftCountConverter x:Key="leftCountConverter"/>
         <local:LeftCountVisibilityConverter x:Key="leftCountVisibilityConverter"/>
+        <local:AddPhraseButtonTextConverter x:Key="addPhraseButtonTextConverter"/>
     </Page.Resources>
-    <!--
-        <Border DockPanel.Dock="Top" Background="#10808080" Margin="0,0,0,4">
-            <DockPanel>
-                <Button DockPanel.Dock="Left"
-                        VerticalAlignment="Stretch"
-                        Content="&lt;"
-                        Foreground="White"
-                        Style="{StaticResource BarButton}"
-                        Click="Button_Click"/>
-                <TextBlock Text="{Binding Path=CurrentBookName}" Margin="8" FontSize="24" FontWeight="Light"/>
-            </DockPanel>
-        </Border>
-        -->
-
     <ScrollViewer 
         ScrollChanged="ScrollViewer_ScrollChanged"
+        
         PanningMode="VerticalOnly">
-        <ItemsControl
-            Background="{x:Null}" 
-            ItemsSource="{Binding Path=Result}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.VisitPhraseCommand}"
-                            CommandParameter="{Binding Path=Phrase}">
-                        <ButtonBase.Template>
-                            <ControlTemplate>
-                                <Border Margin="0,4,0,4" 
-                                    Style="{StaticResource Selectable}">
-                                    <DockPanel Margin="8,8,8,8">
-                                        <TextBlock Text="{Binding Path=LeftCount, Converter={StaticResource leftCountConverter}}"
-                                                Foreground="White"
-                                                FontSize="10"
-                                                DockPanel.Dock="Right"/>
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Path=Phrase}"
+        <StackPanel>
+            <Button Content="{Binding Path=QueryString, Converter={StaticResource addPhraseButtonTextConverter}}" 
+                    Style="{StaticResource ListButton}"
+                    Command="{Binding Path=CreatePhraseCommand}"
+                    CommandParameter="{Binding Path=QueryString}"
+                    Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource booleanToVisibilityConverter}}"/>
+            <ItemsControl
+                Background="{x:Null}" 
+                ItemsSource="{Binding Path=Result}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.VisitPhraseCommand}"
+                                CommandParameter="{Binding Path=Phrase}">
+                            <ButtonBase.Template>
+                                <ControlTemplate>
+                                    <Border Margin="0,4,0,4" 
+                                        Style="{StaticResource Selectable}">
+                                        <DockPanel Margin="8,8,8,8">
+                                            <TextBlock Text="{Binding Path=LeftCount, Converter={StaticResource leftCountConverter}}"
                                                     Foreground="White"
-                                                    FontWeight="Light"
-                                                    FontSize="16"/>
-                                            <WrapPanel Visibility="{Binding Path=LeftCount, Converter={StaticResource leftCountVisibilityConverter}}">
-                                                <Border Style="{StaticResource Tag}">
+                                                    FontSize="10"
+                                                    DockPanel.Dock="Right"/>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Path=Phrase}"
+                                                        Foreground="White"
+                                                        FontWeight="Light"
+                                                        FontSize="16"/>
+                                                <WrapPanel Visibility="{Binding Path=LeftCount, Converter={StaticResource leftCountVisibilityConverter}}">
+                                                    <Border Style="{StaticResource Tag}">
+                                                        <TextBlock 
+                                                            Text="{Binding PartOfSpeech}" 
+                                                            Foreground="White"/>
+                                                    </Border>
                                                     <TextBlock 
-                                                        Text="{Binding PartOfSpeech}" 
-                                                        Foreground="White"/>
-                                                </Border>
-                                                <TextBlock 
-                                                    Text="{Binding Description}"
-                                                    TextWrapping="Wrap"
-                                                    Foreground="White"
-                                                    VerticalAlignment="Center"/>
-                                            </WrapPanel>
-                                        </StackPanel>
-                                    </DockPanel>
-                                </Border>
-                            </ControlTemplate>
-                        </ButtonBase.Template>
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                                                        Text="{Binding Description}"
+                                                        TextWrapping="Wrap"
+                                                        Foreground="White"
+                                                        VerticalAlignment="Center"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </ButtonBase.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
     </ScrollViewer>
-    <!--
-    <ListView x:Name="Results" Background="{x:Null}" ItemsSource="{Binding Path=Result}">
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <VirtualizingStackPanel/>
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <Border Margin="0,4,0,4" Background="#10808080" HorizontalAlignment="Stretch">
-                    <StackPanel Margin="16,8,16,8">
-                        <TextBlock Text="{Binding Path=Phrase}"/>
-                        <TextBlock Text="{Binding Path=PartOfSpeech}"/>
-                        <TextBlock Text="{Binding Path=Description}"/>
-                        <TextBlock Text="{Binding Path=LeftCount}" />
-                    </StackPanel>
-                </Border>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-    -->
 </Page>

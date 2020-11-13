@@ -23,7 +23,6 @@ namespace NDictPlus
                 { UIStates.BookSelection, new BookListView() },
                 { UIStates.PhraseDisplay, new PhraseDetailView() },
                 { UIStates.PhraseQuery, new QueryResultView() },
-                { UIStates.PhraseCreation, new PhraseCreationView() },
             };
 
             this.DataContext = mainViewModel;
@@ -34,7 +33,7 @@ namespace NDictPlus
 
             mainViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
-            ViewFrame.Content = views[UIStates.BookSelection];
+            PageContainer.Content = views[UIStates.BookSelection];
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -42,11 +41,17 @@ namespace NDictPlus
             switch (e.PropertyName)
             {
                 case "UIState":
-                    ViewFrame.Content = views[mainViewModel.UIState];
+                    PageContainer.Content = views[mainViewModel.UIState];
                     break;
                 default:
                     break;
             }
+        }
+
+        private void PageContainer_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            PageContainer.RemoveBackEntry(); 
+            // dirty but the possibly only way to prevent keyboard navigation
         }
     }
 }

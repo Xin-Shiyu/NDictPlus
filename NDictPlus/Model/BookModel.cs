@@ -10,11 +10,11 @@ using System.Windows.Documents;
 
 namespace NDictPlus.Model
 {
-    class PhraseQueryModel
+    class BookModel
     {
         private readonly Trie<DescriptionModel> myTrie;
 
-        public class TrieQueryResult<T>
+        public class TrieQueryModel<T>
             : IEnumerable<KeyValuePair<string, T>>, INotifyCollectionChanged
             where T : class
         {
@@ -24,7 +24,7 @@ namespace NDictPlus.Model
 
             private IEnumerator<KeyValuePair<string, T>> enumerator;
 
-            public TrieQueryResult(Trie<T> source)
+            public TrieQueryModel(Trie<T> source)
             {
                 this.source = source;
                 enumerator = source.GetEnumerator();
@@ -50,39 +50,33 @@ namespace NDictPlus.Model
             }
         }
 
-        public TrieQueryResult<DescriptionModel> Result { get; private set; }
+        public TrieQueryModel<DescriptionModel> QueryModel { get; private set; }
         
         public int PhraseCount { get => myTrie.Count; }
 
-        public DescriptionModel ExactResult
+        public void Create(string phrase)
         {
-            get
-            {
-                if (myTrie.TryGetValue(queryPhrase, out var res))
-                {
-                    return res;
-                }
-                return null;
-            }
+            myTrie.Add(phrase, new DescriptionModel());
         }
 
-        private string queryPhrase;
-
-        public string QueryPhrase
+        public bool Exists(string phrase)
         {
-            get => queryPhrase;
-
-            set
-            {
-                queryPhrase = value;
-                Result.Query(value);
-            }
+            return myTrie.ContainsKey(phrase);
         }
 
-        public PhraseQueryModel(Trie<DescriptionModel> trie)
+        public DescriptionModel GetExactResult(string phrase)
+        {
+            if (myTrie.TryGetValue(phrase, out var res))
+            {
+                return res;
+            }
+            return null;
+        }
+
+        public BookModel(Trie<DescriptionModel> trie)
         {
             myTrie = trie;
-            Result = new TrieQueryResult<DescriptionModel>(trie);
+            QueryModel = new TrieQueryModel<DescriptionModel>(trie);
         }
     }
 }

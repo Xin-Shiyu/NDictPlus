@@ -27,5 +27,5 @@ namespace NDictPlus.Model
         public ObservableCollection<string> RelatedPhrases { get; set; }
     }
 
-    class DescriptionModel : ObservableCollection<SingleDescriptionModel> {}
+    public class DescriptionModel : ObservableCollection<SingleDescriptionModel> {}
 }
