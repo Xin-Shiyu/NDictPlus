@@ -35,6 +35,7 @@
                                                    FontSize="10"
                                                    DockPanel.Dock="Right"/>
                                         <TextBlock Text="{Binding Path=Name}"
+                                                   TextWrapping="Wrap"
                                                    Foreground="White"
                                                    FontWeight="Light"
                                                    FontSize="16"/>

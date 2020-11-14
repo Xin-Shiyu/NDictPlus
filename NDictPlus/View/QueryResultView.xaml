@@ -16,7 +16,6 @@
     </Page.Resources>
     <ScrollViewer 
         ScrollChanged="ScrollViewer_ScrollChanged"
-        
         PanningMode="VerticalOnly">
         <StackPanel>
             <Button Content="{Binding Path=QueryString, Converter={StaticResource addPhraseButtonTextConverter}}" 
@@ -49,7 +48,8 @@
                                                 <TextBlock Text="{Binding Path=Phrase}"
                                                         Foreground="White"
                                                         FontWeight="Light"
-                                                        FontSize="16"/>
+                                                        FontSize="16"
+                                                        TextWrapping="Wrap"/>
                                                 <WrapPanel Visibility="{Binding Path=LeftCount, Converter={StaticResource leftCountVisibilityConverter}}">
                                                     <Border Style="{StaticResource Tag}">
                                                         <TextBlock 

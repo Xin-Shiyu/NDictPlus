@@ -50,6 +50,7 @@ namespace NDictPlus.ViewModel
                 {
                     currentModel = properModel;
                     CurrentBookName = bookName;
+
                     var lazyCollection =
                         new LazyLoadCollection<PartialPhraseViewModel>(
                             new ObservableCollectionMapper<
@@ -59,6 +60,7 @@ namespace NDictPlus.ViewModel
                                 pair =>
                                 {
                                     (var phrase, var model) = pair;
+
                                     var count = model.Count;
                                     var first = count != 0 ? model[0] : null;
                                     return new PartialPhraseViewModel
@@ -70,8 +72,10 @@ namespace NDictPlus.ViewModel
                                     };
                                 }
                             ));
+
                     LoadMoreResultCommand =
-                        new DelegateCommand(lazyCollection.LoadMore);
+                        new StatedDelegateCommand(lazyCollection.LoadMore);
+
                     Result = lazyCollection;
                     UIState = UIStates.PhraseQuery;
                 }
@@ -168,10 +172,10 @@ namespace NDictPlus.ViewModel
                 );
 
             VisitPhraseCommand =
-                new DelegateCommand<string>(VisitPhrase);
+                new StatedDelegateCommand<string>(VisitPhrase);
 
             OpenBookCommand =
-                new DelegateCommand<string>(
+                new StatedDelegateCommand<string>(
                     bookName =>
                     {
                         _ = TryOpenBook(bookName);
@@ -179,13 +183,31 @@ namespace NDictPlus.ViewModel
                     });
 
             CreatePhraseCommand =
-                new DelegateCommand<string>(
-                    phrase =>
+                new CuriousDelegateCommand(
+                    () => CreatePhrase(QueryString),
+                    () => IsValidQuery && !HasExactMatch());
+
+            ShortcutCommand =
+                new StatedDelegateCommand(
+                    () =>
                     {
-                        currentModel.Create(phrase);
-                        VisitPhrase(phrase);
-                    },
-                    canExecuteNow: false);
+                        if (!IsValidQuery) return;
+
+                        if (HasExactMatch())
+                        {
+                            VisitPhrase(QueryString);
+                        }
+                        else
+                        {
+                            CreatePhrase(QueryString);
+                        }
+                    });
+        }
+
+        private void CreatePhrase(string phrase)
+        {
+            currentModel.Create(phrase);
+            VisitPhrase(phrase);
         }
 
         private void VisitPhrase(string phrase)
@@ -204,6 +226,28 @@ namespace NDictPlus.ViewModel
             }
         }
 
+        private bool IsValidQuery { get => !string.IsNullOrEmpty(QueryString); }
+
+        private bool HasExactMatch(bool IsOnly = false)
+        {
+            if (Result == null) return false;
+
+            var enumerator = Result.GetEnumerator();
+            if (!enumerator.MoveNext()) return false;
+
+            var first = enumerator.Current.Phrase;
+
+            if (IsOnly)
+            {
+                var hasSecond = enumerator.MoveNext();
+                return first == QueryString && !hasSecond;
+            }
+            else
+            {
+                return first == QueryString;
+            }
+        }
+
         // IEnumerator<KeyValuePair<string, DescriptionModel>> phraseEnumerator;
 
         public string QueryString
@@ -216,28 +260,26 @@ namespace NDictPlus.ViewModel
                 switch (UIState)
                 {
                     case UIStates.PhraseQuery:
+                    {
+                        currentModel.QueryModel.Query(value);
+
+                        if (HasExactMatch(IsOnly: true))
                         {
-                            currentModel.QueryModel.Query(value);
-
-                            var isValidQuery = value != string.Empty;
-                            var hasExactMatch = isValidQuery && currentModel.Exists(value);
-
-                            if (Result.Count() == 1 && hasExactMatch) // auto visit
-                            {
-                                VisitPhrase(value);
-                                break;
-                            }
-
-                            (CreatePhraseCommand as DelegateCommand<string>)?
-                                .LetExecutableIf(isValidQuery && !hasExactMatch);
-
-                            break;
+                            VisitPhrase(value);
                         }
+                        else
+                        {
+                            (CreatePhraseCommand as CuriousDelegateCommand)
+                                .UpdateExecutability();
+                        }
+
+                        break;
+                    }
                     case UIStates.PhraseDisplay:
-                        {
-                            UIState = UIStates.PhraseQuery;
-                            goto case UIStates.PhraseQuery;
-                        }
+                    {
+                        UIState = UIStates.PhraseQuery;
+                        goto case UIStates.PhraseQuery;
+                    }
                     default:
                         break;
                 }

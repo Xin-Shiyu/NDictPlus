@@ -1,9 +1,4 @@
-﻿using NDictPlus.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 
 namespace NDictPlus.Model
 {

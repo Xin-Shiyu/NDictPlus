@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections.ObjectModel;
-using Nativa;
+﻿using Nativa;
 using NDictPlus.Utilities;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace NDictPlus.Model
 {
     class BookCollectionModel
     {
-        public readonly IDictionary<string, PhraseQueryModel> bookModels =
-            new ObservableDictionary<string, PhraseQueryModel>();
+        public readonly IDictionary<string, BookModel> bookModels =
+            new ObservableDictionary<string, BookModel>();
 
         public void Load()
         {
@@ -18,21 +16,21 @@ namespace NDictPlus.Model
             for (int i = 0; i < 100; ++i) ha.Add(i.ToString(), new DescriptionModel());
             bookModels.Add(
                 "french",
-                new PhraseQueryModel(
+                new BookModel(
                     new Trie<DescriptionModel>()
                     {
                         {
                             "pomme",
                             new DescriptionModel
                             {
-                                new PhraseDescription
+                                new SingleDescriptionModel
                                 {
                                     Pronunciation = "pom",
                                     Meaning = "apple",
                                     PartOfSpeech = "n.f.",
-                                    Examples = new ObservableCollection<UsageExample>
+                                    Examples = new ObservableCollection<UsageExampleModel>
                                     {
-                                        new UsageExample
+                                        new UsageExampleModel
                                         {
                                             Usage = "J'aime manger les pommes.",
                                             Meaning = "I like eating apples."
@@ -54,26 +52,26 @@ namespace NDictPlus.Model
                             "pain",
                             new DescriptionModel
                             {
-                                new PhraseDescription
+                                new SingleDescriptionModel
                                 {
                                     Meaning = "bread",
                                     PartOfSpeech = "n.m.",
-                                    Examples = new ObservableCollection<UsageExample>
+                                    Examples = new ObservableCollection<UsageExampleModel>
                                     {
-                                        new UsageExample
+                                        new UsageExampleModel
                                         {
                                             Usage = "Les pains et les baguettes.",
                                             Meaning = "Bread and baguettes."
                                         }
                                     }
                                 },
-                                new PhraseDescription
+                                new SingleDescriptionModel
                                 {
                                     Meaning = "bread",
                                     PartOfSpeech = "n.m.",
-                                    Examples = new ObservableCollection<UsageExample>
+                                    Examples = new ObservableCollection<UsageExampleModel>
                                     {
-                                        new UsageExample
+                                        new UsageExampleModel
                                         {
                                             Usage = "Les pains et les baguettes.",
                                             Meaning = "Bread and baguettes."
@@ -85,7 +83,7 @@ namespace NDictPlus.Model
                     }));
             bookModels.Add(
                 "japanese",
-                new PhraseQueryModel(ha
+                new BookModel(ha
                     /*
                     new Trie<DescriptionModel>()
                     {
