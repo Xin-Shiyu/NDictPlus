@@ -5,6 +5,7 @@
              StartupUri="View\MainWindow.xaml">
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+        
         <Style TargetType="Border" x:Key="Tag">
             <Setter Property="Background" Value="#20DDDDFF"/>
             <Setter Property="Margin" Value="0,4,4,4"/>
@@ -16,6 +17,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
         <Style TargetType="Border" x:Key="Selectable">
             <Setter Property="Background" Value="#10808080"/>
             <Style.Triggers>
@@ -24,6 +26,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
         <Style TargetType="Button" x:Key="ListButton">
             <Setter Property="Foreground" Value="#50FFFFFF"/>
             <Setter Property="Template">
@@ -45,6 +48,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
         <Style TargetType="Button" x:Key="BarButton">
             <Setter Property="Background" Value="#00000000" />
             <Setter Property="Template">
@@ -57,12 +61,6 @@
                                 Text="{TemplateBinding Content}"
                                 VerticalAlignment="Center"
                                 FontSize="16"/>
-                            <Grid.InputBindings>
-                                <MouseBinding 
-                                    MouseAction="{x:Static MouseAction.LeftClick}"
-                                    Command="{TemplateBinding Command}"
-                                    CommandParameter="{TemplateBinding CommandParameter}"/>
-                            </Grid.InputBindings>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

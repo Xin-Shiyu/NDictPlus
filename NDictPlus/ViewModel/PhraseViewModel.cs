@@ -1,9 +1,7 @@
 ﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace NDictPlus.ViewModel
 {

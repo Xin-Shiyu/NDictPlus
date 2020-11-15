@@ -4,7 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NDictPlus.View"
-      xmlns:nativa="clr-namespace:Nativa"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="PhraseDetailView"
@@ -36,10 +35,10 @@
                                     <TextBlock Text="{Binding Path=PartOfSpeech}" FontStyle="Italic" Margin="0,0,4,0"/>
                                     <TextBlock Text="{Binding Path=Pronunciation}" VerticalAlignment="Center" Margin="4,0,4,0" Foreground="#DDDDDD"/>
                                 </WrapPanel>
-                                <TextBlock FontSize="14"
-                                           TextWrapping="Wrap"
-                                           Text="{Binding Path=Meaning}"
-                                           Margin="0,4,0,0"/>
+                                <TextBox FontSize="14"
+                                         TextWrapping="Wrap"
+                                         Text="{Binding Path=Meaning}"
+                                         Margin="0,4,0,0"/>
                                 <TextBlock Text="EXAMPLES" Style="{StaticResource Annotation}"/>
                                 <Border BorderThickness="4,0,0,0" BorderBrush="#20DDDDFF" Margin="0,4,0,4">
                                     <ItemsControl ItemsSource="{Binding Path=Examples}" Margin="4,2,2,2">
@@ -85,8 +84,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
                 <Button 
-                    Content="Add more..."
-                    Style="{StaticResource ListButton}"/>
+                    Content="Add more description..."
+                    Style="{StaticResource ListButton}"
+                    Command="{Binding Path=AddDescriptionCommand}"/>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

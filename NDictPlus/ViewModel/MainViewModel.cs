@@ -1,8 +1,6 @@
 ﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace NDictPlus.ViewModel
@@ -52,26 +50,7 @@ namespace NDictPlus.ViewModel
                     CurrentBookName = bookName;
 
                     var lazyCollection =
-                        new LazyLoadCollection<PartialPhraseViewModel>(
-                            new ObservableCollectionMapper<
-                                KeyValuePair<string, DescriptionModel>,
-                                PartialPhraseViewModel>(
-                                properModel.QueryModel,
-                                pair =>
-                                {
-                                    (var phrase, var model) = pair;
-
-                                    var count = model.Count;
-                                    var first = count != 0 ? model[0] : null;
-                                    return new PartialPhraseViewModel
-                                    {
-                                        Phrase = phrase,
-                                        PartOfSpeech = first?.PartOfSpeech,
-                                        Description = first?.Meaning,
-                                        LeftCount = count - 1
-                                    };
-                                }
-                            ));
+                        CreateLazyCollection(properModel);
 
                     LoadMoreResultCommand =
                         new StatedDelegateCommand(lazyCollection.LoadMore);
@@ -83,6 +62,27 @@ namespace NDictPlus.ViewModel
             }
             return false;
         }
+
+        private static LazyLoadCollection<PartialPhraseViewModel> CreateLazyCollection(BookModel bookModel) 
+            => 
+            new LazyLoadCollection<PartialPhraseViewModel>(
+                new ObservableCollectionMapper<KeyValuePair<string, DescriptionModel>, PartialPhraseViewModel>(
+                    bookModel.QueryModel,
+                    pair =>
+                    {
+                        (var phrase, var model) = pair;
+
+                        var count = model.Count;
+                        var first = count != 0 ? model[0] : null;
+                        return new PartialPhraseViewModel
+                        {
+                            Phrase = phrase,
+                            PartOfSpeech = first?.PartOfSpeech,
+                            Description = first?.Meaning,
+                            LeftCount = count - 1
+                        };
+                    }
+                ));
 
         public IEnumerable<BookViewModel> BookList
         {
@@ -247,8 +247,6 @@ namespace NDictPlus.ViewModel
                 return first == QueryString;
             }
         }
-
-        // IEnumerator<KeyValuePair<string, DescriptionModel>> phraseEnumerator;
 
         public string QueryString
         {

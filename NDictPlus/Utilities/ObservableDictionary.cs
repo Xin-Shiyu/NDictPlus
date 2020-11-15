@@ -1,12 +1,7 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using System.Collections.Specialized;
-using System.Windows;
-using System.Windows.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Collections;
 
 namespace NDictPlus.Utilities
 {

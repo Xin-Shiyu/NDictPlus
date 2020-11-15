@@ -3,9 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NDictPlus"
         mc:Ignorable="d"
         Title="NDictPlus" Height="450" Width="350"
         Background="#202025">
+    <Window.Resources>
+        <local:UIStateConverter x:Key="uiStateConverter"/>
+    </Window.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Bottom">
             <StackPanel Orientation="Horizontal"
@@ -35,7 +39,7 @@
         <Frame Name="PageContainer"
                NavigationUIVisibility="Hidden" 
                Focusable="False"
-               Navigated="PageContainer_Navigated"
-               JournalOwnership="OwnsJournal"/>
+               JournalOwnership="OwnsJournal"
+               Content="{Binding Path=UIState, Converter={StaticResource uiStateConverter}}"/>
     </DockPanel>
 </Window>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NDictPlus.ViewModel
+﻿namespace NDictPlus.ViewModel
 {
     public class BookViewModel
     {
