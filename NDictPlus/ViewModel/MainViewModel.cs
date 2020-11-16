@@ -1,5 +1,6 @@
 ﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -89,6 +90,7 @@ namespace NDictPlus.ViewModel
             get => _bookList;
             private set
             {
+                if (_bookList is IDisposable disposable) disposable?.Dispose();
                 _bookList = value;
                 RaisePropertyChanged("BookList");
             }
@@ -221,6 +223,7 @@ namespace NDictPlus.ViewModel
             get => _result;
             private set
             {
+                if (_result is IDisposable disposable) disposable?.Dispose();
                 _result = value;
                 RaisePropertyChanged("Result");
             }
@@ -302,6 +305,7 @@ namespace NDictPlus.ViewModel
 
             set
             {
+                if (_currentPhraseDetail is IDisposable disposable) disposable?.Dispose();
                 _currentPhraseDetail = value;
                 RaisePropertyChanged("CurrentPhraseDetail");
             }

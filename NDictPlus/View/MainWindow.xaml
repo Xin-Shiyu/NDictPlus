@@ -40,6 +40,7 @@
                NavigationUIVisibility="Hidden" 
                Focusable="False"
                JournalOwnership="OwnsJournal"
+               Navigated="PageContainer_Navigated"
                Content="{Binding Path=UIState, Converter={StaticResource uiStateConverter}}"/>
     </DockPanel>
 </Window>

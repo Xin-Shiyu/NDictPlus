@@ -1,7 +1,9 @@
 ﻿using NDictPlus.Model;
 using NDictPlus.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace NDictPlus.ViewModel
 {
@@ -40,13 +42,23 @@ namespace NDictPlus.ViewModel
     public class SingleDescriptionViewModel : NotifyPropertyChangedBase
     {
         readonly SingleDescriptionModel _model;
+        private ICommand addExampleCommand;
+        private ICommand addRelatedPhraseCommand;
+        private IEnumerable<UsageExampleViewModel> _examples;
 
         public SingleDescriptionViewModel(SingleDescriptionModel model)
         {
+            System.Diagnostics.Debug.WriteLine(model.Meaning);
             _model = model;
             Examples =
                 new ObservableCollectionMapper<UsageExampleModel, UsageExampleViewModel>
                 (model.Examples, model => new UsageExampleViewModel(model));
+            AddExampleCommand =
+                new StatedDelegateCommand(
+                    () =>
+                    {
+                        model.Examples.Add(new UsageExampleModel());
+                    });
         }
 
         public string PartOfSpeech
@@ -82,9 +94,18 @@ namespace NDictPlus.ViewModel
             }
         }
 
-        public IEnumerable<UsageExampleViewModel> Examples { get; set; }
+        public IEnumerable<UsageExampleViewModel> Examples
+        {
+            get => _examples;
 
-        public ObservableCollection<string> RelatedPhrases 
+            set
+            {
+                if (_examples is IDisposable disposable) disposable?.Dispose();
+                _examples = value;
+            }
+        }
+
+        public ObservableCollection<string> RelatedPhrases
         {
             // the type is so trivial that there is no magic
             get => _model.RelatedPhrases;
@@ -99,20 +120,76 @@ namespace NDictPlus.ViewModel
                 // this won't cost much huh
             }
         }
+
+        public ICommand AddExampleCommand
+        {
+            get => addExampleCommand;
+
+            private set
+            {
+                addExampleCommand = value;
+                RaisePropertyChanged("AddExampleCommand");
+            }
+        }
+
+        public ICommand AddRelatedPhraseCommand
+        {
+            get => addRelatedPhraseCommand;
+
+            private set
+            {
+                addRelatedPhraseCommand = value;
+                RaisePropertyChanged("AddRelatedPhraseCommand");
+            }
+        }
     }
 
-    public class PhraseViewModel
+    public class PhraseViewModel : NotifyPropertyChangedBase, IDisposable
     {
+        private ICommand addDescriptionCommand;
+        private IEnumerable<SingleDescriptionViewModel> _descriptions;
+
         public string Phrase { get; private set; }
 
-        public IEnumerable<SingleDescriptionViewModel> Descriptions { get; private set; }
+        public IEnumerable<SingleDescriptionViewModel> Descriptions
+        {
+            get => _descriptions;
+
+            private set
+            {
+                if (_descriptions is IDisposable disposable) disposable?.Dispose();
+                _descriptions = value;
+            }
+        }
 
         public PhraseViewModel(string phrase, DescriptionModel model)
         {
+            System.Diagnostics.Debug.WriteLine("starts");
             Phrase = phrase;
             Descriptions =
                 new ObservableCollectionMapper<SingleDescriptionModel, SingleDescriptionViewModel>
                 (model, model => new SingleDescriptionViewModel(model));
+            AddDescriptionCommand =
+                new StatedDelegateCommand(() =>
+                {
+                    model.Add(new SingleDescriptionModel());
+                });
+        }
+
+        public ICommand AddDescriptionCommand
+        {
+            get => addDescriptionCommand;
+
+            private set
+            {
+                addDescriptionCommand = value;
+                RaisePropertyChanged("AddDescriptionCommand");
+            }
+        }
+
+        public void Dispose()
+        {
+            Descriptions = null;
         }
     }
 }

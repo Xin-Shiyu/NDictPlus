@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace NDictPlus.Utilities
 {
-    public class LazyLoadCollection<T> : ObservableCollection<T>
+    public class LazyLoadCollection<T> : ObservableCollection<T>, IDisposable
     {
         readonly IEnumerable<T> underlying;
         readonly int eachTimeCount;
@@ -47,6 +48,11 @@ namespace NDictPlus.Utilities
             enumerator = underlying.GetEnumerator();
             finished = false;
             LoadMore(); 
+        }
+
+        public void Dispose()
+        {
+            if (underlying is IDisposable disposable) disposable.Dispose();
         }
     }
 }

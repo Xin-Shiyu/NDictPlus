@@ -75,7 +75,7 @@ namespace NDictPlus.Utilities
 
         public void UpdateExecutability()
         {
-            CanExecuteChanged(this, EventArgs.Empty);
+            CanExecuteChanged.Invoke(this, EventArgs.Empty);
         }
 
         public bool CanExecute(object parameter) => canExecuteFunc.Invoke(parameter as T);
@@ -101,7 +101,7 @@ namespace NDictPlus.Utilities
 
         public void UpdateExecutability()
         {
-            CanExecuteChanged(this, EventArgs.Empty);
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public bool CanExecute(object parameter) => canExecuteFunc.Invoke();

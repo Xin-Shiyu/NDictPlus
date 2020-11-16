@@ -27,61 +27,67 @@
             PanningMode="VerticalOnly">
             <StackPanel>
                 <ItemsControl x:Name="Descriptions" ItemsSource="{Binding Descriptions}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="0,4,0,4" Background="#10808080">
-                            <StackPanel Margin="16,8,16,8">
-                                <WrapPanel>
-                                    <TextBlock Text="{Binding Path=PartOfSpeech}" FontStyle="Italic" Margin="0,0,4,0"/>
-                                    <TextBlock Text="{Binding Path=Pronunciation}" VerticalAlignment="Center" Margin="4,0,4,0" Foreground="#DDDDDD"/>
-                                </WrapPanel>
-                                <TextBox FontSize="14"
-                                         TextWrapping="Wrap"
-                                         Text="{Binding Path=Meaning}"
-                                         Margin="0,4,0,0"/>
-                                <TextBlock Text="EXAMPLES" Style="{StaticResource Annotation}"/>
-                                <Border BorderThickness="4,0,0,0" BorderBrush="#20DDDDFF" Margin="0,4,0,4">
-                                    <ItemsControl ItemsSource="{Binding Path=Examples}" Margin="4,2,2,2">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,4,0,4" Background="#10808080">
+                                <StackPanel Margin="16,8,16,8">
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Path=PartOfSpeech}" FontStyle="Italic" Margin="0,0,4,0"/>
+                                        <TextBlock Text="{Binding Path=Pronunciation}" VerticalAlignment="Center" Margin="4,0,4,0" Foreground="#DDDDDD"/>
+                                    </WrapPanel>
+                                    <TextBox FontSize="14"
+                                             TextWrapping="Wrap"
+                                             Text="{Binding Path=Meaning}"
+                                             Margin="0,4,0,0"/>
+                                    <TextBlock Text="EXAMPLES" Style="{StaticResource Annotation}"/>
+                                    <Border BorderThickness="4,0,0,0" BorderBrush="#20DDDDFF" Margin="0,4,0,4">
+                                        <StackPanel>
+                                            <ItemsControl ItemsSource="{Binding Path=Examples}" Margin="4,2,2,2">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="2">
+                                                            <TextBox Text="{Binding Path=Usage}" FontWeight="Bold"  TextWrapping="Wrap"/>
+                                                            <TextBox Text="{Binding Path=Meaning}" TextWrapping="Wrap"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <Button 
+                                                Content="Add more example..."
+                                                Style="{StaticResource ListButton}"
+                                                Command="{Binding Path=AddExampleCommand}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="RELATED" Style="{StaticResource Annotation}"/>
+                                    <ItemsControl ItemsSource="{Binding Path=RelatedPhrases}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <StackPanel Margin="2">
-                                                    <TextBlock Text="{Binding Path=Usage}" FontWeight="Bold"  TextWrapping="Wrap"/>
-                                                    <TextBlock Text="{Binding Path=Meaning}" TextWrapping="Wrap"/>
-                                                </StackPanel>
+                                                <Button Content="{Binding}"
+                                                        Foreground="White"
+                                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.VisitPhraseCommand}"
+                                                        CommandParameter="{Binding}">
+                                                    <ButtonBase.Template>
+                                                        <ControlTemplate>
+                                                            <Border Style="{StaticResource Tag}">
+                                                                <ContentPresenter
+                                                                    Content="{TemplateBinding ContentControl.Content}"
+                                                                    Margin="2"/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </ButtonBase.Template>
+                                                </Button>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                </Border>
-                                <TextBlock Text="RELATED" Style="{StaticResource Annotation}"/>
-                                <ItemsControl ItemsSource="{Binding Path=RelatedPhrases}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Button Content="{Binding}"
-                                                    Foreground="White"
-                                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.VisitPhraseCommand}"
-                                                    CommandParameter="{Binding}">
-                                                <ButtonBase.Template>
-                                                    <ControlTemplate>
-                                                        <Border Style="{StaticResource Tag}">
-                                                            <ContentPresenter
-                                                                Content="{TemplateBinding ContentControl.Content}"
-                                                                Margin="2"/>
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </ButtonBase.Template>
-                                            </Button>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
             </ItemsControl>
                 <Button 
                     Content="Add more description..."

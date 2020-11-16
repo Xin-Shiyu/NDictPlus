@@ -26,6 +26,11 @@ namespace NDictPlus
             InitializeComponent();
             DataContext = mainViewModel;
         }
+
+        private void PageContainer_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            if (sender is Frame frame) frame.RemoveBackEntry();
+        }
     }
 
     [ValueConversion(typeof(UIStates), typeof(Page))]
