@@ -32,59 +32,6 @@ namespace NDictPlus.ViewModel
         private ICommand _createPhraseCommand;
         private ICommand _shortcutCommand;
 
-        private bool TryOpenBook(string bookName)
-        {
-            if (bookName == string.Empty)
-            {
-                currentModel = null; // closes the book
-                CurrentBookName = string.Empty;
-                UIState = UIStates.BookSelection;
-                return true;
-            }
-            else if (bookName != _currentBookName)
-            {
-                bool opened =
-                    bookCollectionModel.bookModels.TryGetValue(bookName, out var properModel);
-                if (opened)
-                {
-                    currentModel = properModel;
-                    CurrentBookName = bookName;
-
-                    var lazyCollection =
-                        CreateLazyCollection(properModel);
-
-                    LoadMoreResultCommand =
-                        new StatedDelegateCommand(lazyCollection.LoadMore);
-
-                    Result = lazyCollection;
-                    UIState = UIStates.PhraseQuery;
-                }
-                return opened;
-            }
-            return false;
-        }
-
-        private static LazyLoadCollection<PartialPhraseViewModel> CreateLazyCollection(BookModel bookModel) 
-            => 
-            new LazyLoadCollection<PartialPhraseViewModel>(
-                new ObservableCollectionMapper<KeyValuePair<string, DescriptionModel>, PartialPhraseViewModel>(
-                    bookModel.QueryModel,
-                    pair =>
-                    {
-                        (var phrase, var model) = pair;
-
-                        var count = model.Count;
-                        var first = count != 0 ? model[0] : null;
-                        return new PartialPhraseViewModel
-                        {
-                            Phrase = phrase,
-                            PartOfSpeech = first?.PartOfSpeech,
-                            Description = first?.Meaning,
-                            LeftCount = count - 1
-                        };
-                    }
-                ));
-
         public IEnumerable<BookViewModel> BookList
         {
             get => _bookList;
@@ -95,7 +42,6 @@ namespace NDictPlus.ViewModel
                 RaisePropertyChanged("BookList");
             }
         }
-
         public UIStates UIState
         {
             get => _uiState;
@@ -107,150 +53,6 @@ namespace NDictPlus.ViewModel
                 RaisePropertyChanged("UIState");
             }
         }
-
-        public ICommand OpenBookCommand
-        {
-            get => _openBookCommand;
-            private set
-            {
-                _openBookCommand = value;
-                RaisePropertyChanged("OpenBookCommand");
-            }
-        }
-        public ICommand VisitPhraseCommand
-        {
-            get => _visitPhraseCommand;
-            private set
-            {
-                _visitPhraseCommand = value;
-                RaisePropertyChanged("VisitPhraseCommand");
-            }
-        }
-
-        public ICommand LoadMoreResultCommand
-        {
-            get => _loadMoreResultCommand;
-            private set
-            {
-                _loadMoreResultCommand = value;
-                RaisePropertyChanged("LoadMoreResultCommand");
-            }
-        }
-
-        public ICommand CreatePhraseCommand
-        {
-            get => _createPhraseCommand;
-            private set
-            {
-                _createPhraseCommand = value;
-                RaisePropertyChanged("CreatePhraseCommand");
-            }
-        }
-
-        public ICommand ShortcutCommand
-        {
-            get => _shortcutCommand;
-            private set
-            {
-                _shortcutCommand = value;
-                RaisePropertyChanged("ShortcutCommand");
-            }
-        }
-
-        public MainViewModel()
-        {
-            bookCollectionModel = new BookCollectionModel();
-            bookCollectionModel.Load();
-            BookList =
-                new ObservableCollectionMapper
-                <KeyValuePair<string, BookModel>, BookViewModel>
-                (
-                    bookCollectionModel.bookModels,
-                    model => new BookViewModel
-                    {
-                        Name = model.Key,
-                        EntryCount = model.Value.PhraseCount
-                    }
-                );
-
-            VisitPhraseCommand =
-                new StatedDelegateCommand<string>(VisitPhrase);
-
-            OpenBookCommand =
-                new StatedDelegateCommand<string>(
-                    bookName =>
-                    {
-                        _ = TryOpenBook(bookName);
-                        // TO-DO: Handle situation when book does not exist
-                    });
-
-            CreatePhraseCommand =
-                new CuriousDelegateCommand(
-                    () => CreatePhrase(QueryString),
-                    () => IsValidQuery && !HasExactMatch());
-
-            ShortcutCommand =
-                new StatedDelegateCommand(
-                    () =>
-                    {
-                        if (!IsValidQuery) return;
-
-                        if (HasExactMatch())
-                        {
-                            VisitPhrase(QueryString);
-                        }
-                        else
-                        {
-                            CreatePhrase(QueryString);
-                        }
-                    });
-        }
-
-        private void CreatePhrase(string phrase)
-        {
-            currentModel.Create(phrase);
-            VisitPhrase(phrase);
-        }
-
-        private void VisitPhrase(string phrase)
-        {
-            CurrentPhraseDetail = new PhraseViewModel(phrase, currentModel.GetExactResult(phrase));
-            UIState = UIStates.PhraseDisplay;
-        }
-
-        public IEnumerable<PartialPhraseViewModel> Result
-        {
-            get => _result;
-            private set
-            {
-                if (_result is IDisposable disposable) disposable?.Dispose();
-                _result = value;
-                RaisePropertyChanged("Result");
-            }
-        }
-
-        private bool IsValidQuery { get => !string.IsNullOrEmpty(QueryString); }
-
-        private bool HasExactMatch(bool IsOnly = false)
-        {
-            if (Result == null) return false;
-
-            var enumerator = Result.GetEnumerator();
-            if (!enumerator.MoveNext()) return false;
-
-            var first = enumerator.Current.Phrase;
-
-            if (IsOnly)
-            {
-                var hasSecond = enumerator.MoveNext();
-                return first == QueryString && !hasSecond;
-            }
-            else
-            {
-                return first == QueryString;
-            }
-        }
-
         public string QueryString
         {
             get => _queryString;
@@ -287,7 +89,16 @@ namespace NDictPlus.ViewModel
                 RaisePropertyChanged("QueryString");
             }
         }
-
+        public IEnumerable<PartialPhraseViewModel> Result
+        {
+            get => _result;
+            private set
+            {
+                if (_result is IDisposable disposable) disposable?.Dispose();
+                _result = value;
+                RaisePropertyChanged("Result");
+            }
+        }
         public string CurrentBookName
         {
             get => _currentBookName;
@@ -298,7 +109,6 @@ namespace NDictPlus.ViewModel
                 RaisePropertyChanged("CurrentBookName");
             }
         }
-
         public PhraseViewModel CurrentPhraseDetail
         {
             get => _currentPhraseDetail;
@@ -309,6 +119,184 @@ namespace NDictPlus.ViewModel
                 _currentPhraseDetail = value;
                 RaisePropertyChanged("CurrentPhraseDetail");
             }
+        }
+
+        public ICommand OpenBookCommand
+        {
+            get => _openBookCommand;
+            private set
+            {
+                _openBookCommand = value;
+                RaisePropertyChanged("OpenBookCommand");
+            }
+        }
+        public ICommand VisitPhraseCommand
+        {
+            get => _visitPhraseCommand;
+            private set
+            {
+                _visitPhraseCommand = value;
+                RaisePropertyChanged("VisitPhraseCommand");
+            }
+        }
+        public ICommand LoadMoreResultCommand
+        {
+            get => _loadMoreResultCommand;
+            private set
+            {
+                _loadMoreResultCommand = value;
+                RaisePropertyChanged("LoadMoreResultCommand");
+            }
+        }
+        public ICommand CreatePhraseCommand
+        {
+            get => _createPhraseCommand;
+            private set
+            {
+                _createPhraseCommand = value;
+                RaisePropertyChanged("CreatePhraseCommand");
+            }
+        }
+        public ICommand ShortcutCommand
+        {
+            get => _shortcutCommand;
+            private set
+            {
+                _shortcutCommand = value;
+                RaisePropertyChanged("ShortcutCommand");
+            }
+        }
+
+        private bool IsValidQuery() => !string.IsNullOrEmpty(QueryString);
+        private bool HasExactMatch(bool IsOnly = false)
+        {
+            if (Result == null) return false;
+
+            var enumerator = Result.GetEnumerator();
+            if (!enumerator.MoveNext()) return false;
+
+            var first = enumerator.Current.Phrase;
+
+            if (IsOnly)
+            {
+                var hasSecond = enumerator.MoveNext();
+                return first == QueryString && !hasSecond;
+            }
+            else
+            {
+                return first == QueryString;
+            }
+        }
+
+        private static LazyLoadCollection<PartialPhraseViewModel> CreateLazyCollection(BookModel bookModel)
+        =>
+        new LazyLoadCollection<PartialPhraseViewModel>(
+            new ObservableCollectionMapper<KeyValuePair<string, DescriptionModel>, PartialPhraseViewModel>(
+                bookModel.QueryModel,
+                pair =>
+                {
+                    (var phrase, var model) = pair;
+
+                    var count = model.Count;
+                    var first = count != 0 ? model[0] : null;
+                    return new PartialPhraseViewModel
+                    {
+                        Phrase = phrase,
+                        PartOfSpeech = first?.PartOfSpeech,
+                        Description = first?.Meaning,
+                        LeftCount = count - 1
+                    };
+                }
+            ));
+        private bool TryOpenBook(string bookName)
+        {
+            if (bookName == string.Empty)
+            {
+                currentModel = null; // closes the book
+                CurrentBookName = string.Empty;
+                UIState = UIStates.BookSelection;
+                return true;
+            }
+            else if (bookName != _currentBookName)
+            {
+                bool opened =
+                    bookCollectionModel.bookModels.TryGetValue(bookName, out var properModel);
+                if (opened)
+                {
+                    currentModel = properModel;
+                    CurrentBookName = bookName;
+
+                    var lazyCollection =
+                        CreateLazyCollection(properModel);
+
+                    LoadMoreResultCommand =
+                        new StatedDelegateCommand(lazyCollection.LoadMore);
+
+                    Result = lazyCollection;
+                    UIState = UIStates.PhraseQuery;
+                }
+                return opened;
+            }
+            return false;
+        }
+        private void CreatePhrase(string phrase)
+        {
+            currentModel.Create(phrase);
+            VisitPhrase(phrase);
+        }
+        private void VisitPhrase(string phrase)
+        {
+            CurrentPhraseDetail = new PhraseViewModel(phrase, currentModel.GetExactResult(phrase));
+            UIState = UIStates.PhraseDisplay;
+        }
+
+        public MainViewModel()
+        {
+            bookCollectionModel = new BookCollectionModel();
+            bookCollectionModel.Load();
+            BookList =
+                new ObservableCollectionMapper
+                <KeyValuePair<string, BookModel>, BookViewModel>
+                (
+                    bookCollectionModel.bookModels,
+                    model => new BookViewModel
+                    {
+                        Name = model.Key,
+                        EntryCount = model.Value.PhraseCount
+                    }
+                );
+
+            VisitPhraseCommand =
+                new StatedDelegateCommand<string>(VisitPhrase);
+
+            OpenBookCommand =
+                new StatedDelegateCommand<string>(
+                    bookName =>
+                    {
+                        _ = TryOpenBook(bookName);
+                        // TO-DO: Handle situation when book does not exist
+                    });
+
+            CreatePhraseCommand =
+                new CuriousDelegateCommand(
+                    () => CreatePhrase(QueryString),
+                    () => IsValidQuery() && !HasExactMatch());
+
+            ShortcutCommand =
+                new StatedDelegateCommand(
+                    () =>
+                    {
+                        if (!IsValidQuery()) return;
+
+                        if (HasExactMatch())
+                        {
+                            VisitPhrase(QueryString);
+                        }
+                        else
+                        {
+                            CreatePhrase(QueryString);
+                        }
+                    });
         }
     }
 }
