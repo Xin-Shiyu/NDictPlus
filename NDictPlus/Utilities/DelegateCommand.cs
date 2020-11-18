@@ -9,9 +9,9 @@ namespace NDictPlus.Utilities
         readonly Action<T> action;
         bool canExecute;
 
-        public StatedDelegateCommand(Action<T> action, bool canExecuteNow = true)
+        public StatedDelegateCommand(Action<T> act, bool canExecuteNow = true)
         {
-            this.action = action;
+            this.action = act;
             this.canExecute = canExecuteNow;
         }
 
@@ -37,9 +37,9 @@ namespace NDictPlus.Utilities
         readonly Action action;
         bool canExecute;
 
-        public StatedDelegateCommand(Action action, bool canExecuteNow = true)
+        public StatedDelegateCommand(Action act, bool canExecuteNow = true)
         {
-            this.action = action;
+            this.action = act;
             this.canExecute = canExecuteNow;
         }
 
@@ -65,10 +65,10 @@ namespace NDictPlus.Utilities
         readonly Action<T> action;
         readonly Func<T, bool> canExecuteFunc;
 
-        public CuriousDelegateCommand(Action<T> action, Func<T, bool> canExecuteFunc)
+        public CuriousDelegateCommand(Action<T> act, Func<T, bool> when)
         {
-            this.action = action;
-            this.canExecuteFunc = canExecuteFunc;
+            this.action = act;
+            this.canExecuteFunc = when;
         }
 
         public event EventHandler CanExecuteChanged;
@@ -91,10 +91,10 @@ namespace NDictPlus.Utilities
         readonly Action action;
         readonly Func<bool> canExecuteFunc;
 
-        public CuriousDelegateCommand(Action action, Func<bool> canExecuteFunc)
+        public CuriousDelegateCommand(Action act, Func<bool> when)
         {
-            this.action = action;
-            this.canExecuteFunc = canExecuteFunc;
+            this.action = act;
+            this.canExecuteFunc = when;
         }
 
         public event EventHandler CanExecuteChanged;

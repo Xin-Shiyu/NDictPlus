@@ -33,6 +33,18 @@ namespace NDictPlus
         }
     }
 
+    [ValueConversion(typeof(UIStates), typeof(Visibility))]
+    public class UIStateSearchBarVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => (UIStates)value != UIStates.BookSelection
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => null;
+    }
+
     [ValueConversion(typeof(UIStates), typeof(Page))]
     public class UIStateConverter : IValueConverter
     {
@@ -60,10 +72,8 @@ namespace NDictPlus
          * 然而，假如不使用已有的 Page 实例，而是每次导航的时候 new 一个，
          * 则不会出现这种问题，最终 Frame 会导航到 Page2 上，并且 Page1 不会出现在导航的历史记录里。
          */
-        
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
-        }
+            => null;
     }
 }

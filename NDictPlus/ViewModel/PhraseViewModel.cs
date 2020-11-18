@@ -51,8 +51,9 @@ namespace NDictPlus.ViewModel
             System.Diagnostics.Debug.WriteLine(model.Meaning);
             _model = model;
             Examples =
-                new ObservableCollectionMapper<UsageExampleModel, UsageExampleViewModel>
-                (model.Examples, model => new UsageExampleViewModel(model));
+                ObservableCollectionMapper.Map(
+                    model.Examples,
+                    model => new UsageExampleViewModel(model));
             AddExampleCommand =
                 new StatedDelegateCommand(
                     () =>
@@ -112,13 +113,6 @@ namespace NDictPlus.ViewModel
             // there is no need to listen to the event because as the view binds,
             // it actually gets the ref to the real collection in the real model
             // and it should handle all these event firing stuffs and so on
-            set
-            {
-                _model.RelatedPhrases = value;
-                RaisePropertyChanged("RelatedPhrases");
-                // i'm just not so sure about the view
-                // this won't cost much huh
-            }
         }
 
         public ICommand AddExampleCommand
@@ -167,8 +161,9 @@ namespace NDictPlus.ViewModel
             System.Diagnostics.Debug.WriteLine("starts");
             Phrase = phrase;
             Descriptions =
-                new ObservableCollectionMapper<SingleDescriptionModel, SingleDescriptionViewModel>
-                (model, model => new SingleDescriptionViewModel(model));
+                ObservableCollectionMapper.Map(
+                    model,
+                    model => new SingleDescriptionViewModel(model));
             AddDescriptionCommand =
                 new StatedDelegateCommand(() =>
                 {

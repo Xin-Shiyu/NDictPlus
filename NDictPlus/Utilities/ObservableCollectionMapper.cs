@@ -6,6 +6,15 @@ using System.Linq;
 
 namespace NDictPlus.Utilities
 {
+    public static class ObservableCollectionMapper
+    {
+        public static ObservableCollectionMapper<TSource, TTarget>
+            Map<TSource, TTarget>(
+            IEnumerable<TSource> sourceCollection,
+            Func<TSource, TTarget> mapper)
+            => new ObservableCollectionMapper<TSource, TTarget>(sourceCollection, mapper);
+    }
+
     public class ObservableCollectionMapper<TSource, TTarget> 
         : INotifyCollectionChanged, IEnumerable<TTarget>, IDisposable
     {

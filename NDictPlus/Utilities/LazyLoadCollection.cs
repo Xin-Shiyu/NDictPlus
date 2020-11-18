@@ -5,6 +5,12 @@ using System.Collections.Specialized;
 
 namespace NDictPlus.Utilities
 {
+    public static class LazyLoadCollection
+    {
+        public static LazyLoadCollection<T> From<T>(IEnumerable<T> underlying, int eachTimeCount = 10)
+            => new LazyLoadCollection<T>(underlying, eachTimeCount);
+    }
+
     public class LazyLoadCollection<T> : ObservableCollection<T>, IDisposable
     {
         readonly IEnumerable<T> underlying;

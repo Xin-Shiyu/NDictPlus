@@ -6,6 +6,28 @@
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
         
+        <Style TargetType="TextBlock" x:Key="Annotation">
+            <Setter Property="FontSize" Value="8"/>
+            <Setter Property="Margin" Value="0,14,0,4"/>
+        </Style>
+        
+        <Style TargetType="HeaderedContentControl">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Style="{StaticResource Annotation}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="TextBox" x:Key="NiceTextBox">
+            <!--This is not the final solution for all-->
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+        </Style>
+        
         <Style TargetType="Border" x:Key="Tag">
             <Setter Property="Background" Value="#20DDDDFF"/>
             <Setter Property="Margin" Value="0,4,4,4"/>
@@ -56,8 +78,8 @@
                     <ControlTemplate TargetType="Button">
                         <Grid Background="{TemplateBinding Background}">
                             <TextBlock 
-                                Margin="8,0,8,0"
-                                Foreground="{TemplateBinding Foreground}"
+                                Margin="4,0,4,0"
+                                Foreground="white"
                                 Text="{TemplateBinding Content}"
                                 VerticalAlignment="Center"
                                 FontSize="16"/>

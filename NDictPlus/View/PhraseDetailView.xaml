@@ -9,12 +9,6 @@
       Title="PhraseDetailView"
       Foreground="White"
       Background="{x:Null}">
-    <Page.Resources>
-        <Style TargetType="TextBlock" x:Key="Annotation">
-            <Setter Property="FontSize" Value="8"/>
-            <Setter Property="Margin" Value="0,14,0,4"/>
-        </Style>
-    </Page.Resources>
     <DockPanel DataContext="{Binding Path=CurrentPhraseDetail}">
         <Border DockPanel.Dock="Top" Background="#10808080" Margin="0,0,0,4">
             <TextBlock Text="{Binding Phrase}"
@@ -23,41 +17,57 @@
                        FontWeight="ExtraBold"
                        TextWrapping="Wrap"/>
         </Border>
-        <ScrollViewer
+        <ScrollViewer 
+            Focusable="False"
             PanningMode="VerticalOnly">
-            <StackPanel>
-                <ItemsControl x:Name="Descriptions" ItemsSource="{Binding Descriptions}">
+            <StackPanel Focusable="False">
+                <ItemsControl x:Name="Descriptions" ItemsSource="{Binding Descriptions}" Focusable="False">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="0,4,0,4" Background="#10808080">
+                            <Border Margin="0,4,0,4" Background="#10808080" Focusable="False">
                                 <StackPanel Margin="16,8,16,8">
                                     <WrapPanel>
-                                        <TextBlock Text="{Binding Path=PartOfSpeech}" FontStyle="Italic" Margin="0,0,4,0"/>
-                                        <TextBlock Text="{Binding Path=Pronunciation}" VerticalAlignment="Center" Margin="4,0,4,0" Foreground="#DDDDDD"/>
+                                        <TextBox Text="{Binding Path=PartOfSpeech}"
+                                                 FontStyle="Italic" Margin="0,0,4,0"
+                                                 Style="{StaticResource NiceTextBox}"/>
+                                        <TextBox Text="{Binding Path=Pronunciation}"
+                                                 VerticalAlignment="Center"
+                                                 Margin="4,0,4,0" Foreground="#DDDDDD"
+                                                 Style="{StaticResource NiceTextBox}"/>
                                     </WrapPanel>
                                     <TextBox FontSize="14"
                                              TextWrapping="Wrap"
                                              Text="{Binding Path=Meaning}"
-                                             Margin="0,4,0,0"/>
-                                    <TextBlock Text="EXAMPLES" Style="{StaticResource Annotation}"/>
-                                    <Border BorderThickness="4,0,0,0" BorderBrush="#20DDDDFF" Margin="0,4,0,4">
-                                        <StackPanel>
-                                            <ItemsControl ItemsSource="{Binding Path=Examples}" Margin="4,2,2,2">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="2">
-                                                            <TextBox Text="{Binding Path=Usage}" FontWeight="Bold"  TextWrapping="Wrap"/>
-                                                            <TextBox Text="{Binding Path=Meaning}" TextWrapping="Wrap"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                            <Button 
+                                             Margin="0,4,0,0"
+                                             Style="{StaticResource NiceTextBox}"/>
+                                    <HeaderedContentControl Header="EXAMPLES" Focusable="False">
+                                        <Border BorderThickness="4,0,0,0" BorderBrush="#20DDDDFF" Margin="0,4,0,4">
+                                            <StackPanel>
+                                                <ItemsControl ItemsSource="{Binding Path=Examples}" 
+                                                              Margin="4,2,2,2"
+                                                              Focusable="False">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="2">
+                                                                <TextBox Text="{Binding Path=Usage}"
+                                                                     FontWeight="Bold"
+                                                                     TextWrapping="Wrap"
+                                                                     Style="{StaticResource NiceTextBox}"/>
+                                                                <TextBox Text="{Binding Path=Meaning}"
+                                                                     TextWrapping="Wrap"
+                                                                     Style="{StaticResource NiceTextBox}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <Button 
                                                 Content="Add more example..."
                                                 Style="{StaticResource ListButton}"
                                                 Command="{Binding Path=AddExampleCommand}"/>
-                                        </StackPanel>
-                                    </Border>
+                                            </StackPanel>
+                                        </Border>
+                                    </HeaderedContentControl>
+                                    <!--CURRENTLY NOT SUPPORTED
                                     <TextBlock Text="RELATED" Style="{StaticResource Annotation}"/>
                                     <ItemsControl ItemsSource="{Binding Path=RelatedPhrases}">
                                         <ItemsControl.ItemsPanel>
@@ -84,6 +94,7 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+                                    -->
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

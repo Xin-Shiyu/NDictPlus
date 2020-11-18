@@ -9,16 +9,23 @@
         Background="#202025">
     <Window.Resources>
         <local:UIStateConverter x:Key="uiStateConverter"/>
+        <local:UIStateSearchBarVisibilityConverter x:Key="uiStateSearchBarVisibilityConverter"/>
     </Window.Resources>
     <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom">
+        <DockPanel DockPanel.Dock="Bottom"
+                   Visibility="{Binding Path=UIState, Converter={StaticResource uiStateSearchBarVisibilityConverter}}">
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center">
+                <Button Command="{Binding Path=OpenBookCommand}"
+                        CommandParameter=""
+                        Style="{StaticResource BarButton}">
+                    &lt;
+                </Button>
                 <TextBlock Text="{Binding CurrentBookName}"
                        DockPanel.Dock="Left"
                        FontSize="16"
                        Foreground="White"/>
-                <TextBlock Text=">"
+                <TextBlock Text=": "
                            FontSize="16"
                            Foreground="White"/>
             </StackPanel>

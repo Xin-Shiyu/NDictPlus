@@ -6,4 +6,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SharpYaml" Version="1.6.6" />
+  </ItemGroup>
+
 </Project>

@@ -45,23 +45,18 @@
                                                     FontSize="10"
                                                     DockPanel.Dock="Right"/>
                                             <StackPanel>
-                                                <TextBlock Text="{Binding Path=Phrase}"
-                                                        Foreground="White"
-                                                        FontWeight="Light"
-                                                        FontSize="16"
-                                                        TextWrapping="Wrap"/>
-                                                <WrapPanel Visibility="{Binding Path=LeftCount, Converter={StaticResource leftCountVisibilityConverter}}">
-                                                    <Border Style="{StaticResource Tag}">
-                                                        <TextBlock 
-                                                            Text="{Binding PartOfSpeech}" 
-                                                            Foreground="White"/>
-                                                    </Border>
-                                                    <TextBlock 
-                                                        Text="{Binding Description}"
-                                                        TextWrapping="Wrap"
-                                                        Foreground="White"
-                                                        VerticalAlignment="Center"/>
-                                                </WrapPanel>
+                                                <TextBlock 
+                                                    Text="{Binding Path=Phrase}"
+                                                    Foreground="White"
+                                                    FontWeight="Light"
+                                                    FontSize="16"
+                                                    TextWrapping="Wrap"/>
+                                                <!--Currently no part of speech shown-->
+                                                <TextBlock 
+                                                    Text="{Binding Path=Description}"
+                                                    TextWrapping="Wrap"
+                                                    Foreground="White"
+                                                    Grid.Column="1"/>
                                             </StackPanel>
                                         </DockPanel>
                                     </Border>

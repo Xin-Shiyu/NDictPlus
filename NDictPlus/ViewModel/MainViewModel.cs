@@ -18,6 +18,7 @@ namespace NDictPlus.ViewModel
     {
         readonly BookCollectionModel bookCollectionModel;
         BookModel currentModel = null;
+        BookModel.TrieQueryModel<DescriptionModel> currentQueryModel = null;
 
         // never use theses directly!
         string _currentBookName = string.Empty;
@@ -64,9 +65,9 @@ namespace NDictPlus.ViewModel
                 {
                     case UIStates.PhraseQuery:
                     {
-                        currentModel.QueryModel.Query(value);
+                        currentQueryModel.Query(value);
 
-                        if (HasExactMatch(IsOnly: true))
+                        if (HasExactMatch(isOnly: true))
                         {
                             VisitPhrase(value);
                         }
@@ -168,7 +169,7 @@ namespace NDictPlus.ViewModel
         }
 
         private bool IsValidQuery() => !string.IsNullOrEmpty(QueryString);
-        private bool HasExactMatch(bool IsOnly = false)
+        private bool HasExactMatch(bool isOnly = false)
         {
             if (Result == null) return false;
 
@@ -177,7 +178,7 @@ namespace NDictPlus.ViewModel
 
             var first = enumerator.Current.Phrase;
 
-            if (IsOnly)
+            if (isOnly)
             {
                 var hasSecond = enumerator.MoveNext();
                 return first == QueryString && !hasSecond;
@@ -188,57 +189,71 @@ namespace NDictPlus.ViewModel
             }
         }
 
-        private static LazyLoadCollection<PartialPhraseViewModel> CreateLazyCollection(BookModel bookModel)
-        =>
-        new LazyLoadCollection<PartialPhraseViewModel>(
-            new ObservableCollectionMapper<KeyValuePair<string, DescriptionModel>, PartialPhraseViewModel>(
-                bookModel.QueryModel,
-                pair =>
-                {
-                    (var phrase, var model) = pair;
-
-                    var count = model.Count;
-                    var first = count != 0 ? model[0] : null;
-                    return new PartialPhraseViewModel
+        private static LazyLoadCollection<PartialPhraseViewModel> CreateLazyCollection(
+            BookModel.TrieQueryModel<DescriptionModel> queryModel)
+            =>
+            LazyLoadCollection.From(
+                ObservableCollectionMapper.Map(
+                    queryModel,
+                    pair =>
                     {
-                        Phrase = phrase,
-                        PartOfSpeech = first?.PartOfSpeech,
-                        Description = first?.Meaning,
-                        LeftCount = count - 1
-                    };
-                }
-            ));
+                        (var phrase, var model) = pair;
+                        var count = model.Count;
+                        var first = count != 0 ? model[0] : null;
+                        return new PartialPhraseViewModel
+                        {
+                            Phrase = phrase,
+                            PartOfSpeech = first?.PartOfSpeech,
+                            Description = first?.Meaning,
+                            LeftCount = count - 1
+                        };
+                    }));
+
         private bool TryOpenBook(string bookName)
         {
             if (bookName == string.Empty)
             {
-                currentModel = null; // closes the book
-                CurrentBookName = string.Empty;
-                UIState = UIStates.BookSelection;
+                CloseCurrentBook();
                 return true;
             }
-            else if (bookName != _currentBookName)
+            else if (bookName != CurrentBookName)
             {
-                bool opened =
+                bool bookExists =
                     bookCollectionModel.bookModels.TryGetValue(bookName, out var properModel);
-                if (opened)
+                if (bookExists)
                 {
-                    currentModel = properModel;
-                    CurrentBookName = bookName;
-
-                    var lazyCollection =
-                        CreateLazyCollection(properModel);
-
-                    LoadMoreResultCommand =
-                        new StatedDelegateCommand(lazyCollection.LoadMore);
-
-                    Result = lazyCollection;
-                    UIState = UIStates.PhraseQuery;
+                    OpenBook(bookName, properModel);
                 }
-                return opened;
+                return bookExists;
             }
             return false;
         }
+
+        private void OpenBook(string bookName, BookModel properModel)
+        {
+            currentModel = properModel;
+            CurrentBookName = bookName;
+            currentQueryModel = properModel.NewQueryModel();
+
+            var lazyCollection =
+                CreateLazyCollection(currentQueryModel);
+
+            LoadMoreResultCommand =
+                new StatedDelegateCommand(lazyCollection.LoadMore);
+
+            Result = lazyCollection;
+            UIState = UIStates.PhraseQuery;
+        }
+
+        private void CloseCurrentBook()
+        {
+            currentModel = null; // closes the book
+            CurrentBookName = string.Empty;
+            CurrentPhraseDetail = null;
+            UIState = UIStates.BookSelection;
+            QueryString = string.Empty;
+        }
+
         private void CreatePhrase(string phrase)
         {
             currentModel.Create(phrase);
@@ -255,8 +270,7 @@ namespace NDictPlus.ViewModel
             bookCollectionModel = new BookCollectionModel();
             bookCollectionModel.Load();
             BookList =
-                new ObservableCollectionMapper
-                <KeyValuePair<string, BookModel>, BookViewModel>
+                ObservableCollectionMapper.Map
                 (
                     bookCollectionModel.bookModels,
                     model => new BookViewModel
@@ -279,8 +293,8 @@ namespace NDictPlus.ViewModel
 
             CreatePhraseCommand =
                 new CuriousDelegateCommand(
-                    () => CreatePhrase(QueryString),
-                    () => IsValidQuery() && !HasExactMatch());
+                    act: () => CreatePhrase(QueryString),
+                    when: () => IsValidQuery() && !HasExactMatch());
 
             ShortcutCommand =
                 new StatedDelegateCommand(

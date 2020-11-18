@@ -1,4 +1,5 @@
 ﻿using Nativa;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -7,7 +8,7 @@ namespace NDictPlus.Model
 {
     class BookModel
     {
-        private readonly Trie<DescriptionModel> myTrie;
+        private readonly Trie<DescriptionModel> baseTrie;
 
         public class TrieQueryModel<T>
             : IEnumerable<KeyValuePair<string, T>>, INotifyCollectionChanged
@@ -45,23 +46,24 @@ namespace NDictPlus.Model
             }
         }
 
-        public TrieQueryModel<DescriptionModel> QueryModel { get; private set; }
-        
-        public int PhraseCount { get => myTrie.Count; }
+        public TrieQueryModel<DescriptionModel> NewQueryModel()
+            => new TrieQueryModel<DescriptionModel>(baseTrie);
+
+        public int PhraseCount { get => baseTrie.Count; }
 
         public void Create(string phrase)
         {
-            myTrie.Add(phrase, new DescriptionModel());
+            baseTrie.Add(phrase, new DescriptionModel());
         }
 
         public bool Exists(string phrase)
         {
-            return myTrie.ContainsKey(phrase);
+            return baseTrie.ContainsKey(phrase);
         }
 
         public DescriptionModel GetExactResult(string phrase)
         {
-            if (myTrie.TryGetValue(phrase, out var res))
+            if (baseTrie.TryGetValue(phrase, out var res))
             {
                 return res;
             }
@@ -70,8 +72,13 @@ namespace NDictPlus.Model
 
         public BookModel(Trie<DescriptionModel> trie)
         {
-            myTrie = trie;
-            QueryModel = new TrieQueryModel<DescriptionModel>(trie);
+            baseTrie = trie;
         }
+
+        public BookModel() : this(new Trie<DescriptionModel>()) { }
+
+        public Trie<DescriptionModel> GetTrie() => baseTrie;
+        // I don't want it to be a property because it isn't a property
+        // semantically
     }
 }

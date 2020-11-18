@@ -33,8 +33,6 @@ namespace NDictPlus.Compatibility
             }
         }
 
-        private readonly string path;
-
         private readonly Dictionary<string, string> cache =
             new Dictionary<string, string>();
 
@@ -43,7 +41,6 @@ namespace NDictPlus.Compatibility
 
         public VersionedDictionary(string path)
         {
-            this.path = path;
             var dir = new DirectoryInfo(path);
             if (!dir.Exists) dir.Create();
             var files = dir
@@ -74,41 +71,6 @@ namespace NDictPlus.Compatibility
                     }
                 }
             }
-        }
-
-        public void Save()
-        {
-            if (operations.Count == 0) return;
-            var filename = DateTime.Now.ToString("yyyyMMddHHmmssffff");
-            XmlDocument xml = new XmlDocument();
-            xml.AppendChild(xml.CreateXmlDeclaration("1.0", "utf-16", null));
-            xml.AppendChild(xml.CreateElement("group"));
-            foreach (var op in operations)
-            {
-                XmlElement element;
-                switch (op.Type)
-                {
-                    case OperationType.Add:
-                        element = xml.CreateElement("add");
-                        element.SetAttribute("key", op.Key);
-                        element.SetAttribute("val", op.Value);
-                        xml.DocumentElement.AppendChild(element);
-                        break;
-                    case OperationType.Set:
-                        element = xml.CreateElement("set");
-                        element.SetAttribute("key", op.Key);
-                        element.SetAttribute("val", op.Value);
-                        xml.DocumentElement.AppendChild(element);
-                        break;
-                    case OperationType.Del:
-                        element = xml.CreateElement("del");
-                        element.SetAttribute("key", op.Key);
-                        xml.DocumentElement.AppendChild(element);
-                        break;
-                }
-            }
-            xml.Save(Path.Combine(path, $"{filename}.opg"));
-            operations.Clear();
         }
 
         public ICollection<string> Keys => cache.Keys;
