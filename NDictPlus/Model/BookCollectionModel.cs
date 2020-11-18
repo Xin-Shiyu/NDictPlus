@@ -12,125 +12,22 @@ namespace NDictPlus.Model
 
         public void Load()
         {
-            var ha = new Trie<DescriptionModel>();
-            for (int i = 0; i < 100; ++i) ha.Add(i.ToString(), new DescriptionModel());
-            bookModels.Add(
-                "french",
-                new BookModel(
-                    new Trie<DescriptionModel>()
-                    {
-                        {
-                            "pomme",
-                            new DescriptionModel
-                            {
-                                new SingleDescriptionModel
-                                {
-                                    Pronunciation = "pom",
-                                    Meaning = "apple",
-                                    PartOfSpeech = "n.f.",
-                                    Examples = new ObservableCollection<UsageExampleModel>
-                                    {
-                                        new UsageExampleModel
-                                        {
-                                            Usage = "J'aime manger les pommes.",
-                                            Meaning = "I like eating apples."
-                                        }
-                                    },
-                                    RelatedPhrases = new ObservableCollection<string>
-                                    {
-                                        "banane",
-                                        "fraise"
-                                    }
-                                },
-                            }
-                        },
-                        {
-                            "haha",
-                            new DescriptionModel()
-                        },
-                        {
-                            "pain",
-                            new DescriptionModel
-                            {
-                                new SingleDescriptionModel
-                                {
-                                    Meaning = "bread",
-                                    PartOfSpeech = "n.m.",
-                                    Examples = new ObservableCollection<UsageExampleModel>
-                                    {
-                                        new UsageExampleModel
-                                        {
-                                            Usage = "Les pains et les baguettes.",
-                                            Meaning = "Bread and baguettes."
-                                        }
-                                    }
-                                },
-                                new SingleDescriptionModel
-                                {
-                                    Meaning = "bread",
-                                    PartOfSpeech = "n.m.",
-                                    Examples = new ObservableCollection<UsageExampleModel>
-                                    {
-                                        new UsageExampleModel
-                                        {
-                                            Usage = "Les pains et les baguettes.",
-                                            Meaning = "Bread and baguettes."
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }));
-            bookModels.Add(
-                "japanese",
-                new BookModel(ha
-                    /*
-                    new Trie<DescriptionModel>()
-                    {
-                        {
-                            "りんご",
-                            new DescriptionModel
-                            {
-                                new PhraseDescription
-                                {
-                                    Meaning = "apple",
-                                    PartOfSpeech = "n.",
-                                    Examples = new ObservableCollection<UsageExample>
-                                    {
-                                        new UsageExample
-                                        {
-                                            Usage = "私はリンゴを食べるのが好きです。",
-                                            Meaning = "I like eating apples."
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "パン",
-                            new DescriptionModel
-                            {
-                                new PhraseDescription
-                                {
-                                    Meaning = "bread",
-                                    PartOfSpeech = "n.",
-                                    Examples = new ObservableCollection<UsageExample>
-                                    {
-                                        new UsageExample
-                                        {
-                                            Usage = "パンとバゲット。",
-                                            Meaning = "Bread and baguettes."
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }*/));
+            var convertedBooks = new Dictionary<string, Trie<DescriptionModel>>();
+            Compatibility.Legacy.TryLoadInto(
+                convertedBooks,
+                description =>
+                new DescriptionModel { new SingleDescriptionModel { Meaning = description } });
+            foreach ((var name, var trie) in convertedBooks)
+            {
+                bookModels.Add(name, new BookModel(trie));
+            }
+
+            System.AppDomain.CurrentDomain.ProcessExit += (sender, e) => Save();
         }
 
         public void Save()
         {
-
+            
         }
     }
 }
