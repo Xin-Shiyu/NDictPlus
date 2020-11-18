@@ -12,11 +12,11 @@ namespace NDictPlus.Compatibility
             Func<string, TTarget> mapper)
             where TDictionary : IDictionary<string, TTarget>, new()
         {
-            var programPath = AppDomain.CurrentDomain.GetAssemblies()[0].Location;
+            var programPath = Directory.GetCurrentDirectory();
             var booksPath = Path.Combine(programPath, "phrasebooks");
             var booksBase = new DirectoryInfo(booksPath);
             if (!booksBase.Exists) return;
-            var booksDir = 
+            var booksDir =
                 booksBase.GetDirectories("*", searchOption: SearchOption.TopDirectoryOnly);
 
             foreach (var bookDir in booksDir)
